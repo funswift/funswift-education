@@ -27,11 +27,11 @@ type WeeklyGoal = {
     weeklyReadingGoal: Date;
 }
 
-type studentComment = {
+type StudentComment = {
     comment: string;
 }
 
-type Account = {
+type StudentAccount = {
     id: string; //ユーザーID
     name:string;
     password:string;
