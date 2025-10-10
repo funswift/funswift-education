@@ -1,26 +1,39 @@
 type DailyRecord = {
-    id: string; //出席番号
     bedTime: Date; //寝た時刻
     wakeUpTime: Date;//起きた時刻
-    studyStartTime: Date; //勉強を始めた時刻
-    studyFinishTime: Date;//勉強を終えた時刻
-    readingStartTime: Date; //読書を始めた時刻
-    readingFinishTime: Date; //読書を終えた時刻
-    mediaStartTime: Date;
-    mediaFinishTime: Date;
+    studyTime: Date; //勉強時間
+    mediaTime: Date;
     exercise: false;
+    reading: false;
     breakfast: false;
     assistance: false;
-    studentComment: string;
+}
+    
+type DailyGoal = {
+    bedTimeGoal: Date; //寝た時刻
+    wakeUpTimeGoal: Date;//起きた時刻
+    studyTimeGoal: Date;
+    mediaTimeGoal: Date;
+    excerciseGoal: Date;
+    readingGoal: Date;
 }
 
-type DailyGoal = {
-    bedTime_goal: Date; //寝た時刻
-    wakeUpTime_goal: Date;//起きた時刻
-    studyStartTime_goal: Date; //勉強を始めた時刻
-    studyFinishTime_goal: Date;//勉強を終えた時刻
-    readingStartTime_goal: Date; //読書を始めた時刻
-    readingFinishTime_goal: Date; //読書を終えた時刻
-    mediaStartTime_goal: Date;
-    mediaFinishTime_goal: Date;
+type WeeklyGoal = {
+    weeklyBedTimeGoal: Date; //寝た時刻
+    weeklyWakeUpTimeGoal: Date;//起きた時刻
+    weeklyStudyTimeGoal: Date;
+    weeklyMediaTimeGoal: Date;
+    weeklyExcerciseGoal: Date;
+    weeklyReadingGoal: Date;
+}
+
+type studentComment = {
+    comment: string;
+}
+
+type Account = {
+    id: string; //ユーザーID
+    name:string;
+    password:string;
+    class: number;
 }
