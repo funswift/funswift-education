@@ -1,0 +1,3 @@
+type StudentComment = {
+    studentComment: string;
+}
