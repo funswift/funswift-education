@@ -8,7 +8,7 @@ function First() {
   return (
     <div>
       <h1>First</h1>
-      <Link href={"/second"}>Second へ</Link>
+      <Link href={"/second"}>目標を入力する</Link>
     </div>
   );
 }

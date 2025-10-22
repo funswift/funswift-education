@@ -1,4 +1,4 @@
-import Goal from "./goal";
+import Goal from "./goal/goal";
 
 
 export default function Home() {
