@@ -10,7 +10,13 @@ export default function Second() {
       {/* 戻るボタン */}
   <h1>Second</h1>
   <GoalInput />
-  <Link href="/">完了</Link>
+      <Link href="/">完了</Link>
+
+    
     </div>
   );
+
+  
 }
+
+
