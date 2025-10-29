@@ -13,10 +13,23 @@ export default function First() {
        
 
        
-        <div style={{ marginTop: 12 }}>
-          <Link href="/second">目標を入力する</Link>
+        <div style={{ marginTop: 12, textAlign: "right" }}>
+          <Link 
+          href="/second"
+          style={{
+                display: "inline-block",
+                padding: "8px 12px",
+                borderRadius: 8,
+                backgroundColor: "#0070f3",
+                color: "#fff",
+                textDecoration: "none",
+                fontWeight: 600,
+              }}>目標を入力する
+              </Link>
         </div>
       </div>
     </div>
   );
 }
+
+
