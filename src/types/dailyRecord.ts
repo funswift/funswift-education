@@ -1,4 +1,4 @@
-import {Duration} from 'luxon'
+import { Duration } from 'luxon'
 
 type DailyRecord = {
     bedTime: Date; // 寝た時刻
