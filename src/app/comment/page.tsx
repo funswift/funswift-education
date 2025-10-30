@@ -27,14 +27,14 @@ export default function CommentPage() {
           placeholder="がんばったことを入力..."
           className="w-full h-full outline-none text-gray-800 placeholder-gray-400 p-3 pr-14 rounded-lg shadow-sm resize-none"
           
-          style={{ backgroundColor: "#FFFFFF" ,color: "#3B3B3B" }}
+          style={{ backgroundColor: "var(--background)" ,color: "var(--text)" }}
         />
         
         {/* 入力欄の中に重ねる送信ボタン */}
         <button
           type="submit"
           className="absolute right-7 font-semibold transition"
-          style={{ color: "#578FD7" }}
+          style={{ color: "var(--darkBlue)" }}
         >
           送信
         </button>
