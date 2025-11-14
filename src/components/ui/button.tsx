@@ -7,8 +7,8 @@ export const buttonVariants = cva(
   {
     variants: {
       variant: {
-        primary: `bg-accent text-primaryWhite hover:opacity-75`,
-        outline: `bg-white text-accent border border-accent hover:opacity-75`,
+        primary: `bg-[var(--green)] text-[var(--text)] hover:opacity-75`,
+        outline: `bg-white text-[var(--green)] border border-[var(--green)] hover:opacity-75`,
         icon: `bg-transparent hover:bg-bg-gray rounded-full p-2 h-fit`,
       },
     },
