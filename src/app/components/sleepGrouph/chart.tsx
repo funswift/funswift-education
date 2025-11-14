@@ -78,13 +78,22 @@ export default function SleepChart({ data, goal }: Props) {
             label="目標起床"
           />
 
-          {/* 睡眠バー */}
+          {/* 就寝スタート位置（透明） */}
           <Bar
-            dataKey="sleepLength"
-            stackId="a"
-            fill="var(--green)"
+            dataKey="bedHour"
+            stackId="sleep"
+            fill="transparent"
             isAnimationActive={false}
           />
+
+            {/* 睡眠バー（浮く） */}
+            <Bar
+              dataKey="sleepLength"
+              stackId="sleep"
+              fill="var(--green)"
+              isAnimationActive={false}
+            />
+
         </BarChart>
       </ResponsiveContainer>
     </div>
