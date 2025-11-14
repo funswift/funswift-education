@@ -2,9 +2,9 @@ import { Duration } from 'luxon'
 import { DailyRecord } from '../../types/dailyRecord'
 
 
-// 日付をキーにして保存（例: dailyRecord-2025-11-12）
-export function saveDailyRecord(record: DailyRecord) {
-    const dateKey = record.bedTime.toISOString().slice(0, 10)
+// 論理日（recordDate: YYYY-MM-DD）をキーに保存（例: dailyRecord-2025-11-12）
+export function saveDailyRecord(record: DailyRecord, recordDate: string) {
+    const dateKey = recordDate
     const serialized = {
         bedTime: record.bedTime.toISOString(),
         wakeUpTime: record.wakeUpTime.toISOString(),
@@ -14,6 +14,7 @@ export function saveDailyRecord(record: DailyRecord) {
         reading: record.reading,
         breakfast: record.breakfast,
         assistance: record.assistance,
+        recordDate: dateKey,
     }
     localStorage.setItem(`dailyRecord-${dateKey}`, JSON.stringify(serialized))
 }

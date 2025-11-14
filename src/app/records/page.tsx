@@ -1,6 +1,8 @@
 "use client"
 import React, { useEffect, useState } from "react"
-import { saveRecord, getRecords, getRecordByDate } from "./actions"
+import { Duration } from "luxon"
+import { saveDailyRecord, loadDailyRecordByDate } from "./recordStorage"
+import type { DailyRecord } from "../../types/dailyRecord"
 
 type ServerRecord = {
     bedTime: string
@@ -34,8 +36,8 @@ export default function RecordsPage() {
     })
 
     useEffect(() => {
-        buildSlots()
-        fetchList()
+        const arr = buildSlots()
+        fetchList(arr)
     }, [])
 
     function buildSlots() {
@@ -47,13 +49,31 @@ export default function RecordsPage() {
             arr.push(d.toISOString().slice(0, 10))
         }
         setSlots(arr)
+        return arr
     }
 
-    async function fetchList() {
+    async function fetchList(dates?: string[]) {
         setLoading(true)
         try {
-            const data = await getRecords()
-            setList(data)
+            const base = dates ?? slots
+            const mapped: ServerRecord[] = []
+            for (const d of base) {
+                const rec = loadDailyRecordByDate(d)
+                if (rec) {
+                    mapped.push({
+                        bedTime: rec.bedTime.toISOString(),
+                        wakeUpTime: rec.wakeUpTime.toISOString(),
+                        studyTime: rec.studyTime.toISO() || 'PT0M',
+                        mediaTime: rec.mediaTime.toISO() || 'PT0M',
+                        exercise: rec.exercise,
+                        reading: rec.reading,
+                        breakfast: rec.breakfast,
+                        assistance: rec.assistance,
+                        recordDate: d,
+                    })
+                }
+            }
+            setList(mapped)
         } catch (err) {
             setMessage('取得エラー: ' + String(err))
         } finally {
@@ -72,8 +92,7 @@ export default function RecordsPage() {
         setMessage(null)
         setOpenDate(date)
         try {
-            // Server Action を直接呼び出し（HTTP fetch 不要）
-            const data = await getRecordByDate(date)
+            const data = loadDailyRecordByDate(date)
 
             if (!data) {
                 // 新規作成時のデフォルト値（前日 22:00 就寝 / 当日 06:00 起床）
@@ -94,12 +113,11 @@ export default function RecordsPage() {
                 return
             }
 
-            // 既存データがある場合はフォームへ反映
             setForm({
-                bedTime: toLocalInput(data.bedTime),
-                wakeUpTime: toLocalInput(data.wakeUpTime),
-                studyTime: durationIsoToMinutes(data.studyTime),
-                mediaTime: durationIsoToMinutes(data.mediaTime),
+                bedTime: toLocalInput(data.bedTime.toISOString()),
+                wakeUpTime: toLocalInput(data.wakeUpTime.toISOString()),
+                studyTime: Math.round(data.studyTime.as('minutes')),
+                mediaTime: Math.round(data.mediaTime.as('minutes')),
                 exercise: !!data.exercise,
                 reading: !!data.reading,
                 breakfast: !!data.breakfast,
@@ -123,17 +141,17 @@ export default function RecordsPage() {
         setSaving(true)
         setMessage(null)
         try {
-            await saveRecord({
-                bedTime: new Date(form.bedTime).toISOString(),
-                wakeUpTime: new Date(form.wakeUpTime).toISOString(),
-                studyTime: form.studyTime ?? 0,
-                mediaTime: form.mediaTime ?? 0,
+            const record: DailyRecord = {
+                bedTime: new Date(form.bedTime),
+                wakeUpTime: new Date(form.wakeUpTime),
+                studyTime: Duration.fromObject({ minutes: Number(form.studyTime || 0) }),
+                mediaTime: Duration.fromObject({ minutes: Number(form.mediaTime || 0) }),
                 exercise: !!form.exercise,
                 reading: !!form.reading,
                 breakfast: !!form.breakfast,
                 assistance: !!form.assistance,
-                recordDate: openDate,
-            })
+            }
+            saveDailyRecord(record, openDate)
             await fetchList()
             setOpenDate(null)
             setMessage('保存しました')
