@@ -1,4 +1,4 @@
-import SleepChart from "@/app/components/sleepGrouph/chart";
+import SleepChart from "@/app/components/sleepGraph/chart";
 import { DateTime, Duration } from "luxon";
 import { DailyRecord } from "@/types/dailyRecord";
 import { Goal } from "@/types/goal";
