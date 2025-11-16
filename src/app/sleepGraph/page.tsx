@@ -20,7 +20,7 @@ export default function SleepPage() {
 
   // ② 目標（goal）
   const goal: Goal = {
-    bedTimeGoal: new Date("2024-01-01T21:30:00"),
+    bedTimeGoal: new Date("2024-01-01T22:30:00"),
     wakeUpTimeGoal: new Date("2024-01-02T07:00:00"),
     studyTimeGoal: Duration.fromObject({ minutes: 60 }),
     mediaTimeGoal: Duration.fromObject({ minutes: 30 }),

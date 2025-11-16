@@ -43,7 +43,7 @@ export default function SleepChart({ data, goal }: Props) {
   const wakeGoal = DateTime.fromISO(goal.wakeUpTimeGoal);
 
   return (
-    <div style={{ width: "33vw", height: "25vh" }}>
+    <div style={{ width: "25vw", height: "50vh" }}>
       <ResponsiveContainer>
         <BarChart
           data={converted}
@@ -52,15 +52,22 @@ export default function SleepChart({ data, goal }: Props) {
           {/* X軸：日付 */}
           <XAxis dataKey="dateLabel" />
 
-          {/* Y軸：20:00〜8:00（翌日） */}
           <YAxis
             type="number"
-            domain={[20, 32]} // 20〜32（=翌朝8時）
+            domain={[20, 32]}
+            reversed
+            allowDataOverflow={true}    // ← ★自動調整禁止
+            allowDecimals={false}
+            ticks={[2,20,22,24,26,28,30,32]}
+            interval={0}  
             tickFormatter={(v) => {
-              const hour = Math.floor(v % 24);
+              let hour = v;
+              if (hour >= 24) hour -= 24;
               return `${hour}:00`;
             }}
           />
+          
+
 
           <Tooltip />
 
@@ -69,13 +76,13 @@ export default function SleepChart({ data, goal }: Props) {
             y={bedGoal.hour + bedGoal.minute / 60}
             stroke="var(--darkBlue)"
             strokeDasharray="4"
-            label="目標就寝"
+            //label="目標就寝"
           />
           <ReferenceLine
             y={wakeGoal.hour + wakeGoal.minute / 60 + 24}
             stroke="var(--yellow)"
             strokeDasharray="4"
-            label="目標起床"
+            //label="目標起床"
           />
 
           {/* 就寝スタート位置（透明） */}
