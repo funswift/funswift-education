@@ -3,13 +3,13 @@ import { cn } from '@/components/utils';
 import { VariantProps, cva } from 'class-variance-authority';
 
 export const buttonVariants = cva(
-  `flex h-10 items-center justify-center gap-2 rounded-full px-4 text-textL_medium transition disabled:opacity-50 disabled:pointer-events-none transition`,
+  `flex h-10 items-center justify-center gap-2 rounded-lg px-4 text-textL_medium transition disabled:opacity-50 disabled:pointer-events-none transition`,
   {
     variants: {
       variant: {
         primary: `bg-[var(--green)] text-[var(--text)] hover:opacity-75`,
         outline: `bg-white text-[var(--green)] border border-[var(--green)] hover:opacity-75`,
-        icon: `bg-transparent hover:bg-bg-gray rounded-full p-2 h-fit`,
+        icon: `bg-transparent hover:opacity-75 rounded-full p-2 h-fit`,
       },
     },
     defaultVariants: {
