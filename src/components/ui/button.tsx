@@ -42,3 +42,27 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 );
 
 Button.displayName = 'Button';
+
+/* -- Example Usage ---
+import { Button } from '@/components/ui/button';
+import { HiPlus } from 'react-icons/hi2';
+
+export default function HomePage() {
+  return (
+    <div>
+      <div className="m-14 flex w-fit flex-col gap-4">
+        // Primary 
+        <Button>プライマリーボタン</Button>
+
+        // Secondary 
+        <Button variant="outline">セカンダリーボタン</Button>
+
+        // Icon 
+        <Button variant="icon" className="h-10 w-10 p-0">
+          <HiPlus size={32} />
+        </Button>
+      </div>
+    </div>
+  );
+}
+*/
