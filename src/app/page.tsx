@@ -1,4 +1,5 @@
 import Goal from "@/components/Goal/Goal";
+import Image from 'next/image';
 
 
 export default function Home() {
@@ -33,13 +34,11 @@ export default function Home() {
       </header>
 
       {/* メイン内容 */}
-      <section className="flex-1 p-10 bg-white">
+      <div className="flex-1 p-10 bg-white">
         <h2 className="text-xl font-semibold text-[var(--text)]">
           1月1日 〜 1月14日の記録
         </h2>
-      </section>
-      <div className="min-h-screen p-8 flex items-start justify-center">
-        <Goal />
+          <Goal />
       </div>
     </main>
   );
