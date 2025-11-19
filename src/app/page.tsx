@@ -1,4 +1,5 @@
-import Image from "next/image";
+import Goal from "@/components/Goal/Goal";
+
 
 export default function Home() {
   return (
@@ -37,7 +38,9 @@ export default function Home() {
           1月1日 〜 1月14日の記録
         </h2>
       </section>
+      <div className="min-h-screen p-8 flex items-start justify-center">
+        <Goal />
+      </div>
     </main>
   );
 }
-
