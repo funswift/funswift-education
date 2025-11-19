@@ -4,19 +4,7 @@ import { DailyRecord } from '../../types/dailyRecord'
 
 // 論理日（recordDate: YYYY-MM-DD）をキーに保存（例: dailyRecord-2025-11-12）
 export function saveDailyRecord(record: DailyRecord, recordDate: string) {
-    const dateKey = recordDate
-    const serialized = {
-        bedTime: record.bedTime.toISOString(),
-        wakeUpTime: record.wakeUpTime.toISOString(),
-        studyTime: record.studyTime.toISO(),
-        mediaTime: record.mediaTime.toISO(),
-        exercise: record.exercise,
-        reading: record.reading,
-        breakfast: record.breakfast,
-        assistance: record.assistance,
-        recordDate: dateKey,
-    }
-    localStorage.setItem(`dailyRecord-${dateKey}`, JSON.stringify(serialized))
+    localStorage.setItem(`dailyRecord-${recordDate}`, JSON.stringify(record))
 }
 
 // 指定日付の記録を読み込む（編集用）
