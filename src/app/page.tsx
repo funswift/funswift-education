@@ -35,10 +35,12 @@ export default function Home() {
 
       {/* メイン内容 */}
       <div className="flex-1 p-10 bg-white">
-        <h2 className="text-xl font-semibold text-[var(--text)]">
-          1月1日 〜 1月14日の記録
-        </h2>
+        <div className="flex items-start justify-between">
+          <h2 className="text-xl font-semibold text-[var(--text)]">
+            1月1日 〜 1月14日の記録
+          </h2>
           <Goal />
+        </div>
       </div>
     </main>
   );
