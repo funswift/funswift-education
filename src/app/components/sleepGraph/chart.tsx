@@ -43,7 +43,7 @@ export default function SleepChart({ data, goal }: Props) {
   const wakeGoal = DateTime.fromISO(goal.wakeUpTimeGoal);
 
   return (
-    <div style={{ width: "25vw", height: "50vh" }}>
+    <div style={{ width: "100vw", height: "50vh" }}>
       <ResponsiveContainer>
         <BarChart
           data={converted}
@@ -58,7 +58,7 @@ export default function SleepChart({ data, goal }: Props) {
             reversed
             allowDataOverflow={true}    // ← ★自動調整禁止
             allowDecimals={false}
-            ticks={[2,20,22,24,26,28,30,32]}
+            ticks={[20,22,24,26,28,30,32]}
             interval={0}  
             tickFormatter={(v) => {
               let hour = v;
