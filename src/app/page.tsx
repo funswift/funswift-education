@@ -6,7 +6,15 @@ export default function Home() {
     <div className="min-h-screen p-8 flex items-start justify-center">
       <main>
         <Goal />
-        <DailyRow />
+        <div className="flex flex-col gap-4">
+          <DailyRow />
+          <DailyRow />
+          <DailyRow />
+          <DailyRow />
+          <DailyRow />
+          <DailyRow />
+          <DailyRow />
+        </div>
       </main>
     </div>
   );
