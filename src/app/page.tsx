@@ -1,6 +1,6 @@
 import Goal from "@/components/Goal/Goal";
-import Image from 'next/image';
-
+import Image from "next/image";
+import { Button } from "@/components/ui/button";
 
 export default function Home() {
   return (
@@ -17,19 +17,17 @@ export default function Home() {
             className="rounded-xl"
           />
           <div>
-            <h1 className="text-2xl font-semibold text-[var(--text)]">函館　花子</h1>
+            <h1 className="text-2xl font-semibold text-[var(--text)]">
+              函館　花子
+            </h1>
             <span className="text-sm text-white">ノートの魔法使い ✨</span>
           </div>
         </div>
 
         {/* 右側（ボタン群） */}
         <div className="flex space-x-4">
-          <button className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg text-gray-700 font-medium">
-            今までの記録
-          </button>
-          <button className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg text-gray-700 font-medium">
-            設定
-          </button>
+          <Button variant="outline">今までの記録</Button>
+          <Button variant="outline">設定</Button>
         </div>
       </header>
 
