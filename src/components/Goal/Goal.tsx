@@ -41,39 +41,47 @@ export default function Goal() {
   }, []);
 
   return (
-    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "60vh", padding: "2rem" }}>
-      <div style={{ width: 520, border: "2px solid #ccc", borderRadius: 12, padding: "1.25rem", boxShadow: "0 2px 8px rgba(0,0,0,0.06)" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-          <div style={{ flex: 1 }}>
-            <h3 style={{ margin: 0, marginBottom: 8 }}>保存済みの目標</h3>
-            {stored ? (
-              <div style={{ color: "#333" }}>
-                <div>寝る時間: {formatISOToHM(stored.bedTimeGoal)}</div>
-                <div>起きる時間: {formatISOToHM(stored.wakeUpTimeGoal)}</div>
-                <div>メディア時間: {stored.mediaTimeGoalMinutes ?? "未設定"} 分</div>
-                <div>勉強時間: {stored.studyTimeGoalMinutes ?? "未設定"} 分</div>
+    <div
+      style={{
+        width: 520,
+        border: "2px solid #ccc",
+        borderRadius: 12,
+        padding: "1.25rem",
+        boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
+      }}
+    >
+      <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+        <div style={{ flex: 1 }}>
+          <h3 style={{ margin: 0, marginBottom: 8 }}>保存済みの目標</h3>
+          {stored ? (
+            <div style={{ color: "#333" }}>
+              <div>寝る時間: {formatISOToHM(stored.bedTimeGoal)}</div>
+              <div>起きる時間: {formatISOToHM(stored.wakeUpTimeGoal)}</div>
+              <div>
+                メディア時間: {stored.mediaTimeGoalMinutes ?? "未設定"} 分
               </div>
-            ) : (
-              <div style={{ color: "#777" }}>目標がまだ保存されていません</div>
-            )}
-          </div>
+              <div>勉強時間: {stored.studyTimeGoalMinutes ?? "未設定"} 分</div>
+            </div>
+          ) : (
+            <div style={{ color: "#777" }}>目標がまだ保存されていません</div>
+          )}
+        </div>
 
-          <div style={{ minWidth: 180, textAlign: "right" }}>
-            <Link
-              href="/second"
-              style={{
-                display: "inline-block",
-                padding: "8px 12px",
-                borderRadius: 8,
-                backgroundColor: "#0070f3",
-                color: "#fff",
-                textDecoration: "none",
-                fontWeight: 600,
-              }}
-            >
-              目標を入力する
-            </Link>
-          </div>
+        <div style={{ minWidth: 180, textAlign: "right" }}>
+          <Link
+            href="/second"
+            style={{
+              display: "inline-block",
+              padding: "8px 12px",
+              borderRadius: 8,
+              backgroundColor: "#0070f3",
+              color: "#fff",
+              textDecoration: "none",
+              fontWeight: 600,
+            }}
+          >
+            目標を入力する
+          </Link>
         </div>
       </div>
     </div>
