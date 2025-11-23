@@ -7,10 +7,25 @@ import { Goal } from "@/types/goal";
 import React, { useState, useEffect } from "react"; 
 import { loadLast14DaysRecords } from "@/app/records/recordStorage";
 
+type StoredGoal = {
+  bedTimeGoal: string | null;
+  wakeUpTimeGoal: string | null;
+  studyTimeGoalMinutes?: number;
+  mediaTimeGoalMinutes?: number;
+  exerciseGoalMinutes?: number;
+  readingGoalMinutes?: number;
+};
+
+type ChartInput = {
+  bedTime: string;
+  wakeUpTime: string;
+};
+
 export default function SleepPage() {
   const [chartData, setChartData] = useState<ChartInput[]>([]);
+  const [goal, setGoal] = useState<StoredGoal | null>(null);
 
-  // マウント後に localStorage から14日分を読み込む
+  // ---- ① 睡眠記録を読み込む ----
   useEffect(() => {
     const records = loadLast14DaysRecords();
     const converted: ChartInput[] = records.map((r) => ({
@@ -20,45 +35,28 @@ export default function SleepPage() {
     setChartData(converted.reverse());
   }, []);
 
-  // ② 目標（goal）
-  const goal: Goal = {
-    bedTimeGoal: new Date("2024-01-01T22:30:00"),
-    wakeUpTimeGoal: new Date("2024-01-02T07:00:00"),
-    studyTimeGoal: Duration.fromObject({ minutes: 60 }),
-    mediaTimeGoal: Duration.fromObject({ minutes: 30 }),
-    exerciseGoal: Duration.fromObject({ minutes: 20 }),
-    readingGoal: Duration.fromObject({ minutes: 20 }),
+  // ---- ② 目標を localStorage から読み込む（これが欠けていた）----
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem("goal");
+      if (raw) {
+        const parsed = JSON.parse(raw) as StoredGoal;
+        setGoal(parsed);
+      }
+    } catch (e) {
+      console.error("Failed to load goal", e);
+    }
+  }, []);
 
-    weekendBedTimeGoal: new Date("2024-01-01T22:30:00"),
-    weekendWakeUpTimeGoal: new Date("2024-01-02T08:00:00"),
-    weekendStudyTimeGoal: Duration.fromObject({ minutes: 30 }),
-    weekendMediaTimeGoal: Duration.fromObject({ minutes: 60 }),
-    weekendExerciseGoal: Duration.fromObject({ minutes: 15 }),
-    weekendReadingGoal: Duration.fromObject({ minutes: 10 }),
-  };
+  // ---- ③ SleepChart に渡す JSON 用データへ変換 ----
+  const jsonGoal = goal
+    ? {
+        bedTimeGoal: goal.bedTimeGoal,
+        wakeUpTimeGoal: goal.wakeUpTimeGoal,
+      }
+    : null; // 目標が未設定の場合は null
 
-  // ③ ここで JSON 向けに変換（records → jsonRecords）
-  // const jsonRecords = records.map((r) => ({
-  //   bedTime: r.bedTime.toISOString(),
-  //   wakeUpTime: r.wakeUpTime.toISOString(),
-  //   studyMinutes: r.studyTime.as("minutes"),
-  //   mediaMinutes: r.mediaTime.as("minutes"),
-  //   exercise: r.exercise,
-  //   reading: r.reading,
-  //   breakfast: r.breakfast,
-  //   assistance: r.assistance,
-  // }));
-
-  const jsonGoal = {
-    bedTimeGoal: goal.bedTimeGoal.toISOString(),
-    wakeUpTimeGoal: goal.wakeUpTimeGoal.toISOString(),
-    studyMinutesGoal: goal.studyTimeGoal.as("minutes"),
-    mediaMinutesGoal: goal.mediaTimeGoal.as("minutes"),
-    exerciseGoal: goal.exerciseGoal.as("minutes"),
-    readingGoal: goal.readingGoal.as("minutes"),
-  };
-
-  // ④ 描画
+  // ---- ④ 描画 ----
   return (
     <main className="flex justify-center items-center min-h-screen bg-[var(--background)]">
       <SleepChart data={chartData} goal={jsonGoal} />
