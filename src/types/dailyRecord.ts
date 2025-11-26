@@ -1,6 +1,6 @@
 import { Duration } from 'luxon'
 
-type DailyRecord = {
+export type DailyRecord = {
     bedTime: Date; // 寝た時刻
     wakeUpTime: Date; // 起きた時刻
     studyTime: Duration; // 勉強時間（分）
