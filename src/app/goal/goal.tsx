@@ -18,6 +18,9 @@ export default function First() {
     >
       <div style={{ marginTop: 12, textAlign: "right" }}>
         <Link
+      <div style={{ width: 320, border: "2px solid #ccc", borderRadius: 12, padding: "1.25rem", boxShadow: "0 2px 8px rgba(0,0,0,0.06)" }}>
+        <div style={{ marginTop: 12, textAlign: "right" }}>
+          <Link 
           href="/second"
           style={{
             display: "inline-block",
@@ -32,6 +35,5 @@ export default function First() {
           目標を入力する
         </Link>
       </div>
-    </div>
   );
 }
