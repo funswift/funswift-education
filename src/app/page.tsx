@@ -1,8 +1,12 @@
+"use client";
+
 import Goal from "@/components/Goal/Goal";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
+  const router = useRouter();
   return (
     <main className="min-h-screen bg-[var(--background)] flex flex-col">
       {/* Header */}
@@ -26,7 +30,12 @@ export default function Home() {
 
         {/* 右側（ボタン群） */}
         <div className="flex space-x-4">
-          <Button variant="outline">今までの記録</Button>
+          <Button
+            variant="outline"
+            onClick={() => router.push("/sleepGraph")}
+          >
+            今までの記録
+          </Button>
           <Button variant="outline">設定</Button>
         </div>
       </header>
