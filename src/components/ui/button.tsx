@@ -1,6 +1,6 @@
-import React from 'react';
-import { cn } from '@/components/utils';
-import { VariantProps, cva } from 'class-variance-authority';
+import React from "react";
+import { cn } from "@/utils/utils";
+import { VariantProps, cva } from "class-variance-authority";
 
 export const buttonVariants = cva(
   `flex h-10 items-center justify-center gap-2 rounded-lg px-4 text-textL_medium transition disabled:opacity-50 disabled:pointer-events-none transition`,
@@ -13,7 +13,7 @@ export const buttonVariants = cva(
       },
     },
     defaultVariants: {
-      variant: 'primary',
+      variant: "primary",
     },
   }
 );
@@ -24,7 +24,7 @@ interface ButtonProps
 
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   (
-    { className, variant, children, disabled, type = 'button', ...props },
+    { className, variant, children, disabled, type = "button", ...props },
     ref
   ) => {
     return (
@@ -41,7 +41,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   }
 );
 
-Button.displayName = 'Button';
+Button.displayName = "Button";
 
 /* -- Example Usage ---
 import { Button } from '@/components/ui/button';
