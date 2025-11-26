@@ -41,10 +41,9 @@ export default function Home() {
           <Goal />
         </div>
       </div>
-      <Goal />
-        <div className="mt-8">
-          <DailyList />
-        </div>
+      <div className="mt-8">
+        <DailyList />
+      </div>
     </main>
   );
 }
