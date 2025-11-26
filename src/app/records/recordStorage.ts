@@ -1,61 +1,47 @@
-import { Duration } from 'luxon'
-import { DailyRecord } from '../../types/dailyRecord'
+import { Duration } from "luxon";
+import { DailyRecord } from "../../types/dailyRecord";
 
-
-// 論理日（recordDate: YYYY-MM-DD）をキーに保存（例: dailyRecord-2025-11-12）
+// 保存
 export function saveDailyRecord(record: DailyRecord, recordDate: string) {
-    localStorage.setItem(`dailyRecord-${recordDate}`, JSON.stringify(record))
+  localStorage.setItem(`dailyRecord-${recordDate}`, JSON.stringify(record));
 }
 
-// 指定日付の記録を読み込む（編集用）
+// 指定日付の読込
 export function loadDailyRecordByDate(dateStr: string): DailyRecord | null {
-    const raw = localStorage.getItem(`dailyRecord-${dateStr}`)
-    if (!raw) return null
-    try {
-        const parsed = JSON.parse(raw)
-        return {
-            bedTime: new Date(parsed.bedTime),
-            wakeUpTime: new Date(parsed.wakeUpTime),
-            studyTime: Duration.fromISO(parsed.studyTime),
-            mediaTime: Duration.fromISO(parsed.mediaTime),
-            exercise: !!parsed.exercise,
-            reading: !!parsed.reading,
-            breakfast: !!parsed.breakfast,
-            assistance: !!parsed.assistance,
-        }
-    } catch {
-        return null
-    }
+  const raw = localStorage.getItem(`dailyRecord-${dateStr}`);
+  if (!raw) return null;
+
+  try {
+    const parsed = JSON.parse(raw);
+    return {
+      bedTime: parsed.bedTime ? new Date(parsed.bedTime) : null,
+      wakeUpTime: parsed.wakeUpTime ? new Date(parsed.wakeUpTime) : null,
+      studyTime: parsed.studyTime ? Duration.fromISO(parsed.studyTime) : null,
+      mediaTime: parsed.mediaTime ? Duration.fromISO(parsed.mediaTime) : null,
+      exercise: !!parsed.exercise,
+      reading: !!parsed.reading,
+      breakfast: !!parsed.breakfast,
+      assistance: !!parsed.assistance,
+    };
+  } catch {
+    return null;
+  }
 }
 
-// 過去14日分の記録を一覧取得
-export function loadLast14DaysRecords(): DailyRecord[] {
-    const records: DailyRecord[] = []
-    const today = new Date()
+// 最新14日分の読込（未保存の日も返す）
+export function loadLast14DaysRecords(): { date: string; record: DailyRecord | null }[] {
+  const today = new Date();
+  const list: { date: string; record: DailyRecord | null }[] = [];
 
-    for (let i = 0; i < 14; i++) {
-        const d = new Date(today)
-        d.setDate(today.getDate() - i)
-        const key = `dailyRecord-${d.toISOString().slice(0, 10)}`
-        const raw = localStorage.getItem(key)
-        if (!raw) continue
+  for (let i = 0; i < 14; i++) {
+    const d = new Date(today);
+    d.setDate(today.getDate() - i);
 
-        try {
-            const parsed = JSON.parse(raw)
-            records.push({
-                bedTime: new Date(parsed.bedTime),
-                wakeUpTime: new Date(parsed.wakeUpTime),
-                studyTime: Duration.fromISO(parsed.studyTime),
-                mediaTime: Duration.fromISO(parsed.mediaTime),
-                exercise: !!parsed.exercise,
-                reading: !!parsed.reading,
-                breakfast: !!parsed.breakfast,
-                assistance: !!parsed.assistance,
-            })
-        } catch {
-            continue
-        }
-    }
+    const dateStr = d.toISOString().slice(0, 10);
+    const record = loadDailyRecordByDate(dateStr);
 
-    return records
+    list.push({ date: dateStr, record });
+  }
+
+  return list;
 }
