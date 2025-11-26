@@ -1,5 +1,4 @@
 import Goal from "@/components/Goal/Goal";
-import DailyList from "@/components/records/dailyList";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 
