@@ -23,7 +23,7 @@ ChartJS.register(
 
 export default function StudyMediaChart({ data }: { data: ChartData<"line"> }) {
   return (
-    <div style={{ maxWidth: "400px", margin: "0 auto" }}> 
+    <div style={{ maxWidth: "800px", margin: "0 auto" }}> 
       <Line data={data} />
     </div>
   );
