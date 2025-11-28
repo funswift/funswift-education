@@ -116,7 +116,7 @@ if (hasGoal) {
               const wakeISO = entry?.payload?.wakeISO;
 
               if (!bedISO || !wakeISO) {
-                return [`${v.toFixed(1)} 時間`, "睡眠時間"];
+                return [`${Number(v).toFixed(2)} 時間`, "睡眠時間"];
               }
 
               const bed = DateTime.fromISO(bedISO);
@@ -125,10 +125,8 @@ if (hasGoal) {
               const b = bed.isValid ? bed.toFormat("HH:mm") : "--:--";
               const w = wake.isValid ? wake.toFormat("HH:mm") : "--:--";
 
-              return [
-                `${v.toFixed(1)} 時間（${b} → ${w}）`,
-                "睡眠時間",
-              ];
+              return [`${Number(v).toFixed(2)} 時間`, "睡眠時間"];//ホバーで睡眠時間を有効数字2桁で表示
+
             }}
           />
 
