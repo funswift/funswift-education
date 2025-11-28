@@ -12,10 +12,10 @@ import {
 
 import { DateTime } from "luxon";
 
-type ChartInput = {
-  bedTime: string;      // ISO
-  wakeUpTime: string;   // ISO
-};
+// type ChartInput = {
+//   bedTime: string;      // ISO
+//   wakeUpTime: string;   // ISO
+// };
 
 type ChartGoal = {
   bedTimeGoal: string | null;
@@ -47,23 +47,27 @@ export default function SleepChart({
     };
   });
 
+  
   // ---- 目標データが有効ならライン表示 ----
-  const hasGoal =
-    goal &&
-    goal.bedTimeGoal !== null &&
-    goal.wakeUpTimeGoal !== null;
+const hasGoal =
+  goal &&
+  goal.bedTimeGoal !== null &&
+  goal.wakeUpTimeGoal !== null;
 
-  // ★ goal が null のときに絶対にここを実行しない
-  let bedGoalHour: number | null = null;
-  let wakeGoalHour: number | null = null;
+// ★ goal が null のときに絶対にここを実行しない
+let bedGoalHour: number | null = null;
+let wakeGoalHour: number | null = null;
 
-  if (hasGoal) {
-    const bedGoal = DateTime.fromISO(goal!.bedTimeGoal!).setZone("Asia/Tokyo");
-    const wakeGoal = DateTime.fromISO(goal!.wakeUpTimeGoal!).setZone("Asia/Tokyo");
+if (hasGoal) {
+  // Step2: "HH:mm" を手動でパース
+  const [bH, bM] = goal!.bedTimeGoal!.split(":").map(Number);
+  const [wH, wM] = goal!.wakeUpTimeGoal!.split(":").map(Number);
 
-    bedGoalHour = bedGoal.hour + bedGoal.minute / 60;
-    wakeGoalHour = wakeGoal.hour + wakeGoal.minute / 60 + 24;
-  }
+  bedGoalHour = bH + bM / 60;          // 例: 22:30 → 22.5
+  wakeGoalHour = wH + wM / 60 + 24;    // 例: 07:00 → 7 + 24 → 31
+}
+
+
 
   return (
     <div style={{ width: "90vw", height: "60vh" }}>
@@ -83,7 +87,8 @@ export default function SleepChart({
           {/* ---- 20:00〜翌08:00（反転 Y 軸） ---- */}
           <YAxis
             type="number"
-            domain={[19, 33]}
+            domain={[0,50]}
+            //domain={[19,33]}//本当の範囲
             allowDataOverflow={true}
             reversed
             ticks={[20,21,22,23,24,25,26,27,28,29,30,31,32]}
