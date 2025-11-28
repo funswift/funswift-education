@@ -33,22 +33,22 @@ export default function RecordsPage() {
           {
             label: "勉強時間（分）",
             data: studyTimes.reverse(),
-            borderColor: "rgba(54, 162, 235, 1)",
-            backgroundColor: "rgba(54, 162, 235, 0.2)",
+            borderColor: "#90C0FF",
+            backgroundColor: "rgba(144, 192, 255, 0.2)",
             fill: false,
             tension: 0.2,
-            pointBackgroundColor: "rgba(54, 162, 235, 1)",
-            pointBorderColor: "rgba(54, 162, 235, 1)",
+            pointBackgroundColor: "#90C0FF",
+            pointBorderColor: "#90C0FF",
           },
           {
             label: "メディア時間（分）",
             data: mediaTimes.reverse(),
-            borderColor: "rgba(255, 99, 132, 1)",
-            backgroundColor: "rgba(255, 99, 132, 0.2)",
+            borderColor: "#FA8072",
+            backgroundColor: "rgba(250, 128, 114, 0.2)",
             fill: false,
             tension: 0.2,
-            pointBackgroundColor: "rgba(255, 99, 132, 1)",
-            pointBorderColor: "rgba(255, 99, 132, 1)",
+            pointBackgroundColor: "#FA8072",
+            pointBorderColor: "#FA8072",
           },
         ],
       });
@@ -67,7 +67,7 @@ export default function RecordsPage() {
 
   return (
     <div className="p-6 max-w-4xl mx-auto">
-      <h1 className="text-2xl font-semibold mb-6">グラフページ</h1>
+      <h1 className="text-2xl font-semibold mb-6">勉強・メディア時間グラフ</h1>
       <StudyMediaChart data={data} />
     </div>
   );
