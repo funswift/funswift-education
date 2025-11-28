@@ -3,6 +3,7 @@
 import { calcSleepDuration } from "@/utils/calcSleepDuration";
 import { DailyRecord } from "@/types/dailyRecord";
 import { Duration } from "luxon";
+import Link from "next/link";
 
 type Props = {
   date: string; // YYYY-MM-DD
@@ -86,9 +87,12 @@ export default function DailyRow({ date, record }: Props) {
       </div>
 
       {/* 右側：入力リンク */}
-      <button className="text-[var(--darkBlue)] font-semibold hover:underline ml-4">
+      <Link
+        href={`/records/${date}`}
+        className="text-[var(--darkBlue)] font-semibold hover:underline ml-4"
+      >
         入力
-      </button>
+      </Link>
     </div>
   );
 }
