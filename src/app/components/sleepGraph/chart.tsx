@@ -62,7 +62,9 @@ if (hasGoal) {
   const bed = DateTime.fromISO(goal!.bedTimeGoal!);
   const wake = DateTime.fromISO(goal!.wakeUpTimeGoal!);
 
-  bedGoalHour = bed.hour + bed.minute / 60;
+  bedGoalHour =
+    bed.hour + bed.minute / 60 +
+    (bed.hour < 12 ? 24 : 0);
 
   wakeGoalHour =
     wake.hour + wake.minute / 60 +
@@ -90,8 +92,8 @@ if (hasGoal) {
           {/* ---- 20:00〜翌08:00（反転 Y 軸） ---- */}
           <YAxis
             type="number"
-            //domain={[0,50]}//デバッグ用
-            domain={[19,33]}//本当の範囲
+            domain={[0,50]}//デバッグ用
+            //domain={[19,33]}//本当の範囲
             allowDataOverflow={true}
             reversed
             ticks={[20,21,22,23,24,25,26,27,28,29,30,31,32]}
