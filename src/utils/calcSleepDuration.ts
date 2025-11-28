@@ -10,5 +10,5 @@ export const calcSleepDuration = (bed: Date | null, wake: Date | null) => {
   // 翌日またぎにも対応
   const diff = end.diff(start, ["hours", "minutes"]);
 
-  return `${diff.hours}時間${diff.minutes}分`;
+  return `${diff.hours}h${diff.minutes}m`;
 };

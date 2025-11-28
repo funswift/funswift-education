@@ -1,6 +1,9 @@
 import Goal from "@/components/Goal/Goal";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
+// import { useEffect, useState } from "react";
+import DailyRow from "@/components/records/dailyRecords";
+import DailyList from "./records/recordsList";
 
 export default function Home() {
   return (
@@ -39,9 +42,9 @@ export default function Home() {
           </h2>
           <Goal />
         </div>
-      </div>
-      <div className="mt-8">
-        <DailyList />
+        <div className="mt-8">
+          <DailyList />
+        </div>
       </div>
     </main>
   );
