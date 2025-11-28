@@ -12,10 +12,10 @@ import {
 
 import { DateTime } from "luxon";
 
-// type ChartInput = {
-//   bedTime: string;      // ISO
-//   wakeUpTime: string;   // ISO
-// };
+type ChartInput = {
+  bedTime: string;      // ISO
+  wakeUpTime: string;   // ISO
+};
 
 type ChartGoal = {
   bedTimeGoal: string | null;
@@ -87,8 +87,7 @@ if (hasGoal) {
           {/* ---- 20:00〜翌08:00（反転 Y 軸） ---- */}
           <YAxis
             type="number"
-            domain={[0,50]}
-            //domain={[19,33]}//本当の範囲
+            domain={[19,33]}//本当の範囲
             allowDataOverflow={true}
             reversed
             ticks={[20,21,22,23,24,25,26,27,28,29,30,31,32]}
