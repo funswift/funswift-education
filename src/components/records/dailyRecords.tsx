@@ -48,41 +48,51 @@ export default function DailyRow({ date, record }: Props) {
         {dayNum}日
       </div>
 
-      {/* 中央：項目一覧 */}
-      <div className="flex gap-8 flex-1 text-gray-700 text-center">
-        <div>
-          <div className="text-sm">メディア</div>
-          <div className="font-semibold">{media}</div>
-        </div>
+      {/* 中央：項目一覧（全項目を一度に表示するためグリッド化、必要時に省略表示） */}
+      <div className="flex-1 text-gray-700">
+        <div className="grid grid-cols-7 gap-3 items-center text-center w-full">
+          <div className="flex flex-col items-center min-w-0">
+            <div className="text-sm truncate">メディア</div>
+            <div className="font-semibold text-sm truncate">{media}</div>
+          </div>
 
-        <div>
-          <div className="text-sm">勉強</div>
-          <div className="font-semibold">{study}</div>
-        </div>
+          <div className="flex flex-col items-center min-w-0">
+            <div className="text-sm truncate">勉強</div>
+            <div className="font-semibold text-sm truncate">{study}</div>
+          </div>
 
-        <div>
-          <div className="text-sm">睡眠</div>
-          <div className="font-semibold">{sleep}</div>
-        </div>
+          <div className="flex flex-col items-center min-w-0">
+            <div className="text-sm truncate">睡眠</div>
+            <div className="font-semibold text-sm truncate">{sleep}</div>
+          </div>
 
-        <div>
-          <div className="text-sm">朝ご飯</div>
-          <div className="font-semibold">{record ? breakfast : "-"}</div>
-        </div>
+          <div className="flex flex-col items-center min-w-0">
+            <div className="text-sm truncate">朝ご飯</div>
+            <div className="font-semibold text-sm truncate">
+              {record ? breakfast : "-"}
+            </div>
+          </div>
 
-        <div>
-          <div className="text-sm">お手伝い</div>
-          <div className="font-semibold">{record ? assistance : "-"}</div>
-        </div>
+          <div className="flex flex-col items-center min-w-0">
+            <div className="text-sm truncate">お手伝い</div>
+            <div className="font-semibold text-sm truncate">
+              {record ? assistance : "-"}
+            </div>
+          </div>
 
-        <div>
-          <div className="text-sm">読書</div>
-          <div className="font-semibold">{record ? reading : "-"}</div>
-        </div>
+          <div className="flex flex-col items-center min-w-0">
+            <div className="text-sm truncate">読書</div>
+            <div className="font-semibold text-sm truncate">
+              {record ? reading : "-"}
+            </div>
+          </div>
 
-        <div>
-          <div className="text-sm">運動</div>
-          <div className="font-semibold">{record ? exercise : "-"}</div>
+          <div className="flex flex-col items-center min-w-0">
+            <div className="text-sm truncate">運動</div>
+            <div className="font-semibold text-sm truncate">
+              {record ? exercise : "-"}
+            </div>
+          </div>
         </div>
       </div>
 
