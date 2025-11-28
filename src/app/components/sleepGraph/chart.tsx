@@ -159,3 +159,51 @@ if (hasGoal) {
     </div>
   );
 }
+
+
+/*以下サンプルデータ,コンソールで実行してみてください
+(function() {
+  // Luxon Duration を使いたいけど、ブラウザ用に最小限の構造だけ模倣
+  function makeDuration(minutes) {
+    return {
+      values: [minutes],
+      isLuxonDuration: true
+    };
+  }
+
+  // 今日を基準に 14 日前まで
+  const today = new Date();
+  const oneDay = 24 * 60 * 60 * 1000;
+
+  // サンプル：ほぼ同じパターン、日によってズラす
+  for (let i = 0; i < 14; i++) {
+    const d = new Date(today.getTime() - i * oneDay);
+
+    const dateStr = d.toISOString().split("T")[0]; // YYYY-MM-DD
+
+    // ランダムに 21:00〜24:00 に就寝
+    const bed = new Date(d);
+    bed.setHours(21 + Math.floor(Math.random() * 3), Math.floor(Math.random() * 60), 0, 0);
+
+    // 翌日の 6:00〜9:00 に起床
+    const wake = new Date(d);
+    wake.setDate(wake.getDate() + 1);
+    wake.setHours(6 + Math.floor(Math.random() * 3), Math.floor(Math.random() * 60), 0, 0);
+
+    const record = {
+      bedTime: bed.toISOString(),
+      wakeUpTime: wake.toISOString(),
+      studyTime: makeDuration(Math.floor(Math.random() * 90)),       // 0–90分
+      mediaTime: makeDuration(Math.floor(Math.random() * 120)),      // 0–120分
+      exercise: Math.random() > 0.5,
+      reading: Math.random() > 0.5,
+      breakfast: Math.random() > 0.2,
+      assistance: Math.random() > 0.3,
+    };
+
+    localStorage.setItem(`dailyRecord-${dateStr}`, JSON.stringify(record));
+  }
+
+  console.log("✨ 14日分のサンプル睡眠データを保存しました！");
+})();
+*/
