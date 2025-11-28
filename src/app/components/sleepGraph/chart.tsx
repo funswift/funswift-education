@@ -59,13 +59,16 @@ let bedGoalHour: number | null = null;
 let wakeGoalHour: number | null = null;
 
 if (hasGoal) {
-  // Step2: "HH:mm" を手動でパース
-  const [bH, bM] = goal!.bedTimeGoal!.split(":").map(Number);
-  const [wH, wM] = goal!.wakeUpTimeGoal!.split(":").map(Number);
+  const bed = DateTime.fromISO(goal!.bedTimeGoal!);
+  const wake = DateTime.fromISO(goal!.wakeUpTimeGoal!);
 
-  bedGoalHour = bH + bM / 60;          // 例: 22:30 → 22.5
-  wakeGoalHour = wH + wM / 60 + 24;    // 例: 07:00 → 7 + 24 → 31
+  bedGoalHour = bed.hour + bed.minute / 60;
+
+  wakeGoalHour =
+    wake.hour + wake.minute / 60 +
+    (wake.hour < 12 ? 24 : 0);
 }
+
 
 
 
@@ -87,6 +90,7 @@ if (hasGoal) {
           {/* ---- 20:00〜翌08:00（反転 Y 軸） ---- */}
           <YAxis
             type="number"
+            //domain={[0,50]}//デバッグ用
             domain={[19,33]}//本当の範囲
             allowDataOverflow={true}
             reversed
@@ -102,31 +106,17 @@ if (hasGoal) {
 
           {/* ---- Tooltip ---- */}
           <Tooltip
-            labelFormatter={(label, dataPoint) => {
-              const d = dataPoint?.[0];
-              if (!d || !d.bedISO) return label;
-
-              const bed = DateTime.fromISO(d.bedISO);
-              if (!bed.isValid) return label;
-
-              return `${bed.toFormat("MM/dd")} の睡眠`;
-            }}
             formatter={(v, name, entry: any) => {
               const bedISO = entry?.payload?.bedISO;
               const wakeISO = entry?.payload?.wakeISO;
 
-              if (!bedISO || !wakeISO) {
-                return [`${Number(v).toFixed(2)} 時間`, "睡眠時間"];
-              }
-
               const bed = DateTime.fromISO(bedISO);
               const wake = DateTime.fromISO(wakeISO);
 
-              const b = bed.isValid ? bed.toFormat("HH:mm") : "--:--";
-              const w = wake.isValid ? wake.toFormat("HH:mm") : "--:--";
-
-              return [`${Number(v).toFixed(2)} 時間`, "睡眠時間"];//ホバーで睡眠時間を有効数字2桁で表示
-
+              return [
+                `${Number(v).toFixed(2)} 時間（${bed.toFormat("HH:mm")} → ${wake.toFormat("HH:mm")}）`,
+                "睡眠時間"
+              ];
             }}
           />
 
