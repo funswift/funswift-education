@@ -47,23 +47,32 @@ export default function SleepChart({
     };
   });
 
+  
   // ---- 目標データが有効ならライン表示 ----
-  const hasGoal =
-    goal &&
-    goal.bedTimeGoal !== null &&
-    goal.wakeUpTimeGoal !== null;
+const hasGoal =
+  goal &&
+  goal.bedTimeGoal !== null &&
+  goal.wakeUpTimeGoal !== null;
 
-  // ★ goal が null のときに絶対にここを実行しない
-  let bedGoalHour: number | null = null;
-  let wakeGoalHour: number | null = null;
+// ★ goal が null のときに絶対にここを実行しない
+let bedGoalHour: number | null = null;
+let wakeGoalHour: number | null = null;
 
-  if (hasGoal) {
-    const bedGoal = DateTime.fromISO(goal!.bedTimeGoal!).setZone("Asia/Tokyo");
-    const wakeGoal = DateTime.fromISO(goal!.wakeUpTimeGoal!).setZone("Asia/Tokyo");
+if (hasGoal) {
+  const bed = DateTime.fromISO(goal!.bedTimeGoal!);
+  const wake = DateTime.fromISO(goal!.wakeUpTimeGoal!);
 
-    bedGoalHour = bedGoal.hour + bedGoal.minute / 60;
-    wakeGoalHour = wakeGoal.hour + wakeGoal.minute / 60 + 24;
-  }
+  bedGoalHour =
+    bed.hour + bed.minute / 60 +
+    (bed.hour < 12 ? 24 : 0);
+
+  wakeGoalHour =
+    wake.hour + wake.minute / 60 +
+    (wake.hour < 12 ? 24 : 0);
+}
+
+
+
 
   return (
     <div style={{ width: "90vw", height: "60vh" }}>
@@ -83,7 +92,8 @@ export default function SleepChart({
           {/* ---- 20:00〜翌08:00（反転 Y 軸） ---- */}
           <YAxis
             type="number"
-            domain={[19, 33]}
+            //domain={[0,50]}//デバッグ用
+            domain={[19,33]}//本当の範囲
             allowDataOverflow={true}
             reversed
             ticks={[20,21,22,23,24,25,26,27,28,29,30,31,32]}
@@ -98,32 +108,16 @@ export default function SleepChart({
 
           {/* ---- Tooltip ---- */}
           <Tooltip
-            labelFormatter={(label, dataPoint) => {
-              const d = dataPoint?.[0];
-              if (!d || !d.bedISO) return label;
-
-              const bed = DateTime.fromISO(d.bedISO);
-              if (!bed.isValid) return label;
-
-              return `${bed.toFormat("MM/dd")} の睡眠`;
-            }}
             formatter={(v, name, entry: any) => {
               const bedISO = entry?.payload?.bedISO;
               const wakeISO = entry?.payload?.wakeISO;
 
-              if (!bedISO || !wakeISO) {
-                return [`${v.toFixed(1)} 時間`, "睡眠時間"];
-              }
-
               const bed = DateTime.fromISO(bedISO);
               const wake = DateTime.fromISO(wakeISO);
 
-              const b = bed.isValid ? bed.toFormat("HH:mm") : "--:--";
-              const w = wake.isValid ? wake.toFormat("HH:mm") : "--:--";
-
               return [
-                `${v.toFixed(1)} 時間（${b} → ${w}）`,
-                "睡眠時間",
+                `${Number(v).toFixed(2)} 時間（${bed.toFormat("HH:mm")} → ${wake.toFormat("HH:mm")}）`,
+                "睡眠時間"
               ];
             }}
           />
@@ -165,3 +159,51 @@ export default function SleepChart({
     </div>
   );
 }
+
+
+/*以下サンプルデータ,コンソールで実行してみてください
+(function() {
+  // Luxon Duration を使いたいけど、ブラウザ用に最小限の構造だけ模倣
+  function makeDuration(minutes) {
+    return {
+      values: [minutes],
+      isLuxonDuration: true
+    };
+  }
+
+  // 今日を基準に 14 日前まで
+  const today = new Date();
+  const oneDay = 24 * 60 * 60 * 1000;
+
+  // サンプル：ほぼ同じパターン、日によってズラす
+  for (let i = 0; i < 14; i++) {
+    const d = new Date(today.getTime() - i * oneDay);
+
+    const dateStr = d.toISOString().split("T")[0]; // YYYY-MM-DD
+
+    // ランダムに 21:00〜24:00 に就寝
+    const bed = new Date(d);
+    bed.setHours(21 + Math.floor(Math.random() * 3), Math.floor(Math.random() * 60), 0, 0);
+
+    // 翌日の 6:00〜9:00 に起床
+    const wake = new Date(d);
+    wake.setDate(wake.getDate() + 1);
+    wake.setHours(6 + Math.floor(Math.random() * 3), Math.floor(Math.random() * 60), 0, 0);
+
+    const record = {
+      bedTime: bed.toISOString(),
+      wakeUpTime: wake.toISOString(),
+      studyTime: makeDuration(Math.floor(Math.random() * 90)),       // 0–90分
+      mediaTime: makeDuration(Math.floor(Math.random() * 120)),      // 0–120分
+      exercise: Math.random() > 0.5,
+      reading: Math.random() > 0.5,
+      breakfast: Math.random() > 0.2,
+      assistance: Math.random() > 0.3,
+    };
+
+    localStorage.setItem(`dailyRecord-${dateStr}`, JSON.stringify(record));
+  }
+
+  console.log("✨ 14日分のサンプル睡眠データを保存しました！");
+})();
+*/
