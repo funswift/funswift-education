@@ -6,7 +6,6 @@ export default function Second() {
   return (
     <div>
       {/* 戻るボタン */}
-
   <GoalInput />
     </div>
   );
