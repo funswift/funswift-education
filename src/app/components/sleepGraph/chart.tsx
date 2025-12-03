@@ -89,7 +89,7 @@ export default function SleepChart({
             ticks={[20,21,22,23,24,25,26,27,28,29,30,31,32]}
             interval={0}
             allowDecimals={false}
-            tickFormatter={(v) => {
+            tickFormatter={(v: number) => {
               let hour = Math.floor(v);
               if (hour >= 24) hour -= 24;
               return `${hour}:00`;
@@ -98,7 +98,7 @@ export default function SleepChart({
 
           {/* ---- Tooltip ---- */}
           <Tooltip
-            labelFormatter={(label, dataPoint) => {
+            labelFormatter={(label: any, dataPoint: any) => {
               const d = dataPoint?.[0];
               if (!d || !d.bedISO) return label;
 
@@ -107,7 +107,7 @@ export default function SleepChart({
 
               return `${bed.toFormat("MM/dd")} の睡眠`;
             }}
-            formatter={(v, name, entry: any) => {
+            formatter={(v: any, name: any, entry: any) => {
               const bedISO = entry?.payload?.bedISO;
               const wakeISO = entry?.payload?.wakeISO;
 
