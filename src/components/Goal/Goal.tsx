@@ -11,11 +11,6 @@ type StoredGoal = {
   mediaTimeGoalMinutes?: number;
   exerciseGoalMinutes?: number;
   readingGoalMinutes?: number;
-  // weekend fields
-  weekendBedTimeGoal?: string | null;
-  weekendWakeUpTimeGoal?: string | null;
-  weekendStudyTimeGoalMinutes?: number;
-  weekendMediaTimeGoalMinutes?: number;
 };
 
 function formatISOToHM(iso: string | null) {
@@ -48,55 +43,39 @@ export default function Goal() {
 
   return (
     // fixed widget at top-right
-    <div style={{ position: "fixed", top: 16, right: 16, zIndex: 1000 }}>
-      <div style={{ width: 900, maxWidth: "min(95vw, 1100px)", border: "2px solid #ccc", borderRadius: 12, padding: "1rem", boxShadow: "0 2px 8px rgba(0,0,0,0.06)", background: "#fff" }}>
+    <div style={{ position: "fixed", top: 105 
+    , right: 16, zIndex: 1000 }}>
+      <div style={{ width: 1000, maxWidth: "min(95vw, 1100px)", border: "2px solid #ccc", borderRadius: 12, padding: "1rem", boxShadow: "0 2px 8px rgba(0,0,0,0.06)", background: "#fff" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 12, justifyContent: "space-between" }}>
           <div style={{ flex: 1 }}>
-            <h4 style={{ margin: 0, marginBottom: 6 }}>目標時間</h4>
+            <h1 style={{  fontSize: 17,margin: 0, marginBottom: 6 }}>目標時間</h1>
             {stored ? (
-              <div style={{ color: "#333", fontSize: 13 }}>
+              <div style={{ color: "#333", fontSize: 16 }}>
                 {/* 平日の行 */}
                 <div style={{ display: "flex", gap: 24, alignItems: "center", marginBottom: 8 }}>
+                  
                   <div style={{ minWidth: 160 }}>
-                    <div style={{ fontWeight: 600, fontSize: 12 }}>寝る時間</div>
+                    <div style={{ fontWeight: 600, fontSize: 17}}>寝る時間</div>
                     <div style={{ color: "#444" }}>{formatISOToHM(stored.bedTimeGoal)}</div>
                   </div>
                   <div style={{ minWidth: 160 }}>
-                    <div style={{ fontWeight: 600, fontSize: 12 }}>起きる時間</div>
+                    <div style={{ fontWeight: 600, fontSize: 17}}>起きる時間</div>
                     <div style={{ color: "#444" }}>{formatISOToHM(stored.wakeUpTimeGoal)}</div>
                   </div>
                   <div style={{ minWidth: 160 }}>
-                    <div style={{ fontWeight: 600, fontSize: 12 }}>メディア時間</div>
+                    <div style={{ fontWeight: 600, fontSize: 17}}>メディア時間</div>
                     <div style={{ color: "#444" }}>{stored.mediaTimeGoalMinutes ?? "未設定"} 分</div>
                   </div>
                   <div style={{ minWidth: 160 }}>
-                    <div style={{ fontWeight: 600, fontSize: 12 }}>勉強した時間</div>
+                    <div style={{ fontWeight: 600, fontSize: 17}}>勉強した時間</div>
                     <div style={{ color: "#444" }}>{stored.studyTimeGoalMinutes ?? "未設定"} 分</div>
                   </div>
                 </div>
 
-                {/* 週末の行 */}
-                <div style={{ display: "flex", gap: 24, alignItems: "center" }}>
-                  <div style={{ minWidth: 160 }}>
-                    <div style={{ fontWeight: 600, fontSize: 12 }}>寝る時間（土日祝）</div>
-                    <div style={{ color: "#444" }}>{formatISOToHM(stored.weekendBedTimeGoal ?? null)}</div>
-                  </div>
-                  <div style={{ minWidth: 160 }}>
-                    <div style={{ fontWeight: 600, fontSize: 12 }}>起きる時間（土日祝）</div>
-                    <div style={{ color: "#444" }}>{formatISOToHM(stored.weekendWakeUpTimeGoal ?? null)}</div>
-                  </div>
-                  <div style={{ minWidth: 160 }}>
-                    <div style={{ fontWeight: 600, fontSize: 12 }}>メディア時間（土日祝）</div>
-                    <div style={{ color: "#444" }}>{stored.weekendMediaTimeGoalMinutes ?? "未設定"} 分</div>
-                  </div>
-                  <div style={{ minWidth: 160 }}>
-                    <div style={{ fontWeight: 600, fontSize: 12 }}>勉強時間（土日祝）</div>
-                    <div style={{ color: "#444" }}>{stored.weekendStudyTimeGoalMinutes ?? "未設定"} 分</div>
-                  </div>
-                </div>
+               
               </div>
             ) : (
-              <div style={{ color: "#777", fontSize: 13 }}>目標がまだ保存されていません</div>
+              <div style={{ color: "#777", fontSize: 15 }}>目標がまだ保存されていません</div>
             )}
           </div>
 
