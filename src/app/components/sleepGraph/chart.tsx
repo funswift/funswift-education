@@ -169,7 +169,7 @@ if (hasGoal) {
 
   const today = new Date();
 
-  for (let i = 0; i < 14; i++) {
+  for (let i = 0; i < 14; i++) {　
     const base = new Date(today);
     base.setDate(today.getDate() - i);
 
