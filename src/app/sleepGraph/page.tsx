@@ -8,7 +8,9 @@ import { DailyRecord } from "@/types/dailyRecord";
 import React, { useState, useEffect } from "react"; 
 import { loadLast14DaysRecords } from "@/app/records/recordStorage";
 import { ChartData } from "chart.js";
-
+import Image from "next/image";
+import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
 type StoredGoal = {
   bedTimeGoal: string | null;
   wakeUpTimeGoal: string | null;
@@ -24,6 +26,7 @@ type ChartInput = {
 };
 
 export default function SleepPage() {
+  const router = useRouter(); 
   const [chartData, setChartData] = useState<ChartInput[]>([]);
   const [goal, setGoal] = useState<StoredGoal | null>(null);
   const [lineData, setLineData] = useState<ChartData<"line"> | null>(null);
@@ -101,16 +104,58 @@ export default function SleepPage() {
 
  // ---- ④ SleepChart + StudyMediaChart を表示 ----
   return (
-    <main className="min-h-screen bg-[var(--background)] p-6">
-      <div className="flex flex-col md:flex-row gap-8 justify-center items-start">
-        {/* 左：睡眠グラフ */}
-        <div className="w-full md:w-1/2 bg-white p-4 rounded-xl shadow">
-          <SleepChart data={chartData} goal={goal} />
+    <main className="min-h-screen bg-[var(--background)] flex flex-col">
+
+      {/* ----------------------- */}
+      {/* 🌟 ホームと同じヘッダー */}
+      {/* ----------------------- */}
+      <header className="w-full bg-[var(--lightBlue)] p-4 flex items-center justify-between">
+        {/* 左（アイコン＋名前） */}
+        <div className="flex items-center space-x-3">
+          <Image
+            src="/kotori-icon.png"
+            alt="コトリ"
+            width={48}
+            height={48}
+            className="rounded-xl"
+          />
+          <div>
+            <h1 className="text-2xl font-semibold text-[var(--text)]">
+              函館　花子
+            </h1>
+            <span className="text-sm text-white">ノートの魔法使い ✨</span>
+          </div>
         </div>
 
-        {/* 右：勉強・メディア折れ線グラフ */}
-        <div className="w-full md:w-1/2 bg-white p-4 rounded-xl shadow">
-          {lineData ? <StudyMediaChart data={lineData} /> : <p>Loading...</p>}
+        {/* 右（ボタン） */}
+        <div className="flex space-x-4">
+          <Button variant="outline" onClick={() => router.push("/")}>
+            ホームに戻る
+          </Button>
+          <Button variant="outline">設定</Button>
+        </div>
+      </header>
+
+      {/* ----------------------- */}
+      {/* 🌟 グラフを中央寄せで表示 */}
+      {/* ----------------------- */}
+      <div className="flex-1 flex justify-center items-center p-6">
+        <div className="flex flex-col md:flex-row gap-10 max-w-6xl w-full justify-center items-center">
+
+          {/* 睡眠グラフ */}
+          <div className="w-full md:w-1/2 bg-white p-4 rounded-xl shadow min-w-0 ">
+            <SleepChart data={chartData} goal={jsonGoal} />
+          </div>
+
+          {/* 勉強・メディア折れ線グラフ */}
+          <div className="w-full md:w-1/2 bg-white p-4 rounded-xl shadow min-w-0">
+            {lineData ? (
+              <StudyMediaChart data={lineData} />
+            ) : (
+              <p>Loading...</p>
+            )}
+          </div>
+
         </div>
       </div>
     </main>

@@ -161,49 +161,63 @@ if (hasGoal) {
 }
 
 
-/*以下サンプルデータ,コンソールで実行してみてください
-(function() {
-  // Luxon Duration を使いたいけど、ブラウザ用に最小限の構造だけ模倣
-  function makeDuration(minutes) {
-    return {
-      values: [minutes],
-      isLuxonDuration: true
-    };
-  }
+/*サンプルデータ
 
-  // 今日を基準に 14 日前まで
+(function () {
+  // ISO Duration の作成 ("PT90M")
+  const toISO = (minutes) => `PT${minutes}M`;
+
   const today = new Date();
-  const oneDay = 24 * 60 * 60 * 1000;
 
-  // サンプル：ほぼ同じパターン、日によってズラす
   for (let i = 0; i < 14; i++) {
-    const d = new Date(today.getTime() - i * oneDay);
+    const base = new Date(today);
+    base.setDate(today.getDate() - i);
 
-    const dateStr = d.toISOString().split("T")[0]; // YYYY-MM-DD
+    const key = `dailyRecord-${base.toISOString().slice(0, 10)}`;
 
-    // ランダムに 21:00〜24:00 に就寝
-    const bed = new Date(d);
-    bed.setHours(21 + Math.floor(Math.random() * 3), Math.floor(Math.random() * 60), 0, 0);
+    // -----------------------------------
+    // 🛏️ 就寝時間：22:00〜23:59（0時以降は絶対に寝ない）
+    // -----------------------------------
+    const sleepHourFloat = 22 + Math.random() * 2; // 22〜24未満
+    const bed = new Date(base);
 
-    // 翌日の 6:00〜9:00 に起床
-    const wake = new Date(d);
+    const bedHour = Math.floor(sleepHourFloat);      // 22 or 23
+    const bedMin = Math.floor((sleepHourFloat - bedHour) * 60); // 0〜59
+
+    // 0時超えは絶対に起こらないので翌日処理は不要
+    bed.setHours(bedHour, bedMin, 0, 0); // 22:00〜23:59
+
+    // -----------------------------------
+    // 🌅 起床時間：翌 5:00〜9:00
+    // -----------------------------------
+    const wakeHourFloat = 5 + Math.random() * 4; // 5〜9
+    const wake = new Date(base);
     wake.setDate(wake.getDate() + 1);
-    wake.setHours(6 + Math.floor(Math.random() * 3), Math.floor(Math.random() * 60), 0, 0);
 
+    const wakeHour = Math.floor(wakeHourFloat);
+    const wakeMin = Math.floor((wakeHourFloat - wakeHour) * 60);
+    wake.setHours(wakeHour, wakeMin, 0, 0);
+
+    // -----------------------------------
+    // 📘 勉強 / メディア時間：0〜120分
+    // -----------------------------------
     const record = {
       bedTime: bed.toISOString(),
       wakeUpTime: wake.toISOString(),
-      studyTime: makeDuration(Math.floor(Math.random() * 90)),       // 0–90分
-      mediaTime: makeDuration(Math.floor(Math.random() * 120)),      // 0–120分
+      studyTime: toISO(Math.floor(Math.random() * 120)),
+      mediaTime: toISO(Math.floor(Math.random() * 120)),
       exercise: Math.random() > 0.5,
       reading: Math.random() > 0.5,
-      breakfast: Math.random() > 0.2,
-      assistance: Math.random() > 0.3,
+      breakfast: true,
+      assistance: false,
     };
 
-    localStorage.setItem(`dailyRecord-${dateStr}`, JSON.stringify(record));
+    localStorage.setItem(key, JSON.stringify(record));
   }
 
-  console.log("✨ 14日分のサンプル睡眠データを保存しました！");
+  console.log("✨ 0時以降に絶対に寝ない14日分データを保存しました！");
 })();
+
+
+
 */
