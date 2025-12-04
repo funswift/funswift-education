@@ -38,7 +38,7 @@ export default function Home() {
       <div className="flex-1 p-5 bg-white">
         <div className="flex items-start justify-between">
           <h2 className="text-xl font-semibold text-[var(--text)]">
-            1月1日 〜 1月14日の記録
+            11月22日 〜 12月5日の記録
           </h2>
           <Goal />
         </div>
