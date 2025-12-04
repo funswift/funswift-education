@@ -43,46 +43,87 @@ export default function Goal() {
 
   return (
     // fixed widget at top-right
-    <div style={{ position: "fixed", top: 105 
-    , right: 16, zIndex: 1000 }}>
-      <div style={{ width: 1000, maxWidth: "min(95vw, 1100px)", border: "2px solid #ccc", borderRadius: 12, padding: "1rem", boxShadow: "0 2px 8px rgba(0,0,0,0.06)", background: "#fff" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 12, justifyContent: "space-between" }}>
-          <div style={{ flex: 1 }}>
-            <h1 style={{  fontSize: 17,margin: 0, marginBottom: 6 }}>目標時間</h1>
-            {stored ? (
-              <div style={{ color: "#333", fontSize: 16 }}>
-                {/* 平日の行 */}
-                <div style={{ display: "flex", gap: 24, alignItems: "center", marginBottom: 8 }}>
-                  
-                  <div style={{ minWidth: 160 }}>
-                    <div style={{ fontWeight: 600, fontSize: 17}}>寝る時間</div>
-                    <div style={{ color: "#444" }}>{formatISOToHM(stored.bedTimeGoal)}</div>
-                  </div>
-                  <div style={{ minWidth: 160 }}>
-                    <div style={{ fontWeight: 600, fontSize: 17}}>起きる時間</div>
-                    <div style={{ color: "#444" }}>{formatISOToHM(stored.wakeUpTimeGoal)}</div>
-                  </div>
-                  <div style={{ minWidth: 160 }}>
-                    <div style={{ fontWeight: 600, fontSize: 17}}>メディア時間</div>
-                    <div style={{ color: "#444" }}>{stored.mediaTimeGoalMinutes ?? "未設定"} 分</div>
-                  </div>
-                  <div style={{ minWidth: 160 }}>
-                    <div style={{ fontWeight: 600, fontSize: 17}}>勉強した時間</div>
-                    <div style={{ color: "#444" }}>{stored.studyTimeGoalMinutes ?? "未設定"} 分</div>
+    <div
+      style={{
+        width: 1000,
+        maxWidth: "min(95vw, 1100px)",
+        border: "2px solid #ccc",
+        borderRadius: 12,
+        padding: "1rem",
+        boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
+        background: "#fff",
+      }}
+    >
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: 12,
+          justifyContent: "space-between",
+        }}
+      >
+        <div style={{ flex: 1 }}>
+          <h1 style={{ fontSize: 14, margin: 0, marginBottom: 6 }}>目標時間</h1>
+          {stored ? (
+            <div style={{ color: "#333", fontSize: 14 }}>
+              {/* 平日の行 */}
+              <div
+                style={{
+                  display: "flex",
+                  gap: 24,
+                  alignItems: "center",
+                  marginBottom: 8,
+                }}
+              >
+                <div style={{ minWidth: 160 }}>
+                  <div style={{ fontWeight: 600, fontSize: 11 }}>寝る時間</div>
+                  <div style={{ color: "#444" }}>
+                    {formatISOToHM(stored.bedTimeGoal)}
                   </div>
                 </div>
-
-               
+                <div style={{ minWidth: 160 }}>
+                  <div style={{ fontWeight: 600, fontSize: 11 }}>
+                    起きる時間
+                  </div>
+                  <div style={{ color: "#444" }}>
+                    {formatISOToHM(stored.wakeUpTimeGoal)}
+                  </div>
+                </div>
+                <div style={{ minWidth: 160 }}>
+                  <div style={{ fontWeight: 600, fontSize: 11 }}>
+                    メディア時間
+                  </div>
+                  <div style={{ color: "#444" }}>
+                    {stored.mediaTimeGoalMinutes ?? "未設定"} 分
+                  </div>
+                </div>
+                <div style={{ minWidth: 160 }}>
+                  <div style={{ fontWeight: 600, fontSize: 11 }}>
+                    勉強した時間
+                  </div>
+                  <div style={{ color: "#444" }}>
+                    {stored.studyTimeGoalMinutes ?? "未設定"} 分
+                  </div>
+                </div>
               </div>
-            ) : (
-              <div style={{ color: "#777", fontSize: 15 }}>目標がまだ保存されていません</div>
-            )}
-          </div>
+            </div>
+          ) : (
+            <div style={{ color: "#777", fontSize: 15 }}>
+              目標がまだ保存されていません
+            </div>
+          )}
+        </div>
 
-          <div style={{ display: "flex", alignItems: "center", marginLeft: 12, flexShrink: 0 }}>
-            {/* Use project Button component and navigate on click */}
-            <GoalButton />
-          </div>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            marginLeft: 12,
+            flexShrink: 0,
+          }}
+        >
+          {/* Use project Button component and navigate on click */}
+          <GoalButton />
         </div>
       </div>
     </div>
@@ -91,7 +132,5 @@ export default function Goal() {
 
 function GoalButton() {
   const router = useRouter();
-  return (
-    <Button onClick={() => router.push('/second')}>目標を入力する</Button>
-  );
+  return <Button onClick={() => router.push("/second")}>目標を入力する</Button>;
 }
