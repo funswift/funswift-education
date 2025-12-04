@@ -75,8 +75,8 @@ if (hasGoal) {
 
 
   return (
-    <div style={{ width: "90vw", height: "60vh" }}>
-      <ResponsiveContainer>
+    <div className="w-full h-[300px]">
+      <ResponsiveContainer width="100%" height="100%">
         <BarChart
           data={converted}
           margin={{ top: 20, right: 20, bottom: 50, left: 20 }}
@@ -96,7 +96,7 @@ if (hasGoal) {
             domain={[19,33]}//本当の範囲
             allowDataOverflow={true}
             reversed
-            ticks={[20,21,22,23,24,25,26,27,28,29,30,31,32]}
+            ticks={[20,22,24,26,28,30,32]}
             interval={0}
             allowDecimals={false}
             tickFormatter={(v) => {
