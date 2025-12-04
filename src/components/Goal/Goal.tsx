@@ -49,7 +49,7 @@ export default function Goal() {
         maxWidth: "min(95vw, 1100px)",
         border: "2px solid #ccc",
         borderRadius: 12,
-        padding: "1rem",
+        padding: "5px 15px",
         boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
         background: "#fff",
       }}
@@ -63,7 +63,7 @@ export default function Goal() {
         }}
       >
         <div style={{ flex: 1 }}>
-          <h1 style={{ fontSize: 14, margin: 0, marginBottom: 6 }}>目標時間</h1>
+          <h1 style={{ fontSize: 13, margin: 0, marginBottom: 6 }}>目標時間</h1>
           {stored ? (
             <div style={{ color: "#333", fontSize: 14 }}>
               {/* 平日の行 */}
