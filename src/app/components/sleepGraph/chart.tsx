@@ -47,32 +47,23 @@ export default function SleepChart({
     };
   });
 
-  
   // ---- 目標データが有効ならライン表示 ----
-const hasGoal =
-  goal &&
-  goal.bedTimeGoal !== null &&
-  goal.wakeUpTimeGoal !== null;
+  const hasGoal =
+    goal &&
+    goal.bedTimeGoal !== null &&
+    goal.wakeUpTimeGoal !== null;
 
-// ★ goal が null のときに絶対にここを実行しない
-let bedGoalHour: number | null = null;
-let wakeGoalHour: number | null = null;
+  // ★ goal が null のときに絶対にここを実行しない
+  let bedGoalHour: number | null = null;
+  let wakeGoalHour: number | null = null;
 
-if (hasGoal) {
-  const bed = DateTime.fromISO(goal!.bedTimeGoal!);
-  const wake = DateTime.fromISO(goal!.wakeUpTimeGoal!);
+  if (hasGoal) {
+    const bedGoal = DateTime.fromISO(goal!.bedTimeGoal!).setZone("Asia/Tokyo");
+    const wakeGoal = DateTime.fromISO(goal!.wakeUpTimeGoal!).setZone("Asia/Tokyo");
 
-  bedGoalHour =
-    bed.hour + bed.minute / 60 +
-    (bed.hour < 12 ? 24 : 0);
-
-  wakeGoalHour =
-    wake.hour + wake.minute / 60 +
-    (wake.hour < 12 ? 24 : 0);
-}
-
-
-
+    bedGoalHour = bedGoal.hour + bedGoal.minute / 60;
+    wakeGoalHour = wakeGoal.hour + wakeGoal.minute / 60 + 24;
+  }
 
   return (
     <div className="w-full h-[300px]">
@@ -92,14 +83,13 @@ if (hasGoal) {
           {/* ---- 20:00〜翌08:00（反転 Y 軸） ---- */}
           <YAxis
             type="number"
-            //domain={[0,50]}//デバッグ用
-            domain={[19,33]}//本当の範囲
+            domain={[19, 33]}
             allowDataOverflow={true}
             reversed
             ticks={[20,22,24,26,28,30,32]}
             interval={0}
             allowDecimals={false}
-            tickFormatter={(v) => {
+            tickFormatter={(v: number) => {
               let hour = Math.floor(v);
               if (hour >= 24) hour -= 24;
               return `${hour}:00`;
@@ -108,16 +98,32 @@ if (hasGoal) {
 
           {/* ---- Tooltip ---- */}
           <Tooltip
-            formatter={(v, name, entry: any) => {
+            labelFormatter={(label: any, dataPoint: any) => {
+              const d = dataPoint?.[0];
+              if (!d || !d.bedISO) return label;
+
+              const bed = DateTime.fromISO(d.bedISO);
+              if (!bed.isValid) return label;
+
+              return `${bed.toFormat("MM/dd")} の睡眠`;
+            }}
+            formatter={(v: any, name: any, entry: any) => {
               const bedISO = entry?.payload?.bedISO;
               const wakeISO = entry?.payload?.wakeISO;
+
+              if (!bedISO || !wakeISO) {
+                return [`${v.toFixed(1)} 時間`, "睡眠時間"];
+              }
 
               const bed = DateTime.fromISO(bedISO);
               const wake = DateTime.fromISO(wakeISO);
 
+              const b = bed.isValid ? bed.toFormat("HH:mm") : "--:--";
+              const w = wake.isValid ? wake.toFormat("HH:mm") : "--:--";
+
               return [
-                `${Number(v).toFixed(2)} 時間（${bed.toFormat("HH:mm")} → ${wake.toFormat("HH:mm")}）`,
-                "睡眠時間"
+                `${v.toFixed(1)} 時間（${b} → ${w}）`,
+                "睡眠時間",
               ];
             }}
           />
