@@ -53,7 +53,9 @@ export default function Home() {
         <div className="mt-5">
           <DailyList />
         </div>
-        <CommentPage />
+        <div className ="mt-5">
+          <CommentPage />
+        </div>
       </div>
     </main>
   );
