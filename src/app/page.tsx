@@ -4,6 +4,7 @@ import Goal from "@/components/Goal/Goal";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
+import DailyList from "./records/recordsList";
 
 export default function Home() {
   const router = useRouter();

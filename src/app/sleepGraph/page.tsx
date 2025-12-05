@@ -6,7 +6,7 @@ import { DateTime, Duration } from "luxon";
 import { DailyRecord } from "@/types/dailyRecord";
 
 import React, { useState, useEffect } from "react"; 
-import { loadLast14DaysRecords } from "@/app/records/recordStorage";
+import { loadLast14Days } from "@/app/records/recordStorage";
 import { ChartData } from "chart.js";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
@@ -33,53 +33,63 @@ export default function SleepPage() {
 
   // ---- ① 睡眠記録を読み込む ----
   useEffect(() => {
-    const records = loadLast14DaysRecords();
-    const converted: ChartInput[] = records.map((r) => ({
-      bedTime: r.bedTime.toISOString(),
-      wakeUpTime: r.wakeUpTime.toISOString(),
-    }));
-    setChartData(converted.reverse());
-  }, []);
+  const list = loadLast14Days();  // ← これは { date, record }[]
 
-// ---- ② 14日分の勉強・メディアデータ（折れ線グラフ用）----
-  useEffect(() => {
-    const records = loadLast14DaysRecords();
-
-    if (records.length === 0) return;
-
-    const labels: string[] = [];
-    const studyTimes: number[] = [];
-    const mediaTimes: number[] = [];
-
-    records.forEach((record) => {
-      const d = record.bedTime;
-      const label = `${d.getUTCMonth() + 1}/${d.getUTCDate()}`;
-      labels.push(label);
-      studyTimes.push(record.studyTime.as("minutes"));
-      mediaTimes.push(record.mediaTime.as("minutes"));
+  const converted: ChartInput[] = list
+    .filter(item => item.record !== null)  // null レコードは除外
+    .map((item) => {
+      const rec = item.record!;
+      return {
+        bedTime: rec.bedTime!.toISOString(),
+        wakeUpTime: rec.wakeUpTime!.toISOString(),
+      };
     });
-    setLineData({
-      labels: labels.reverse(),
-      datasets: [
-        {
-          label: "勉強時間（分）",
-          data: studyTimes.reverse(),
-          borderColor: "#90C0FF",
-          backgroundColor: "rgba(144, 192, 255, 0.2)",
-          fill: false,
-          tension: 0.2,
-        },
-        {
-          label: "メディア時間（分）",
-          data: mediaTimes.reverse(),
-          borderColor: "#FA8072",
-          backgroundColor: "rgba(250, 128, 114, 0.2)",
-          fill: false,
-          tension: 0.2,
-        },
-      ],
-    });
-  }, []);
+
+  setChartData(converted.reverse());
+}, []);
+
+
+useEffect(() => {
+  const list = loadLast14Days();
+  const valid = list.filter(item => item.record !== null);
+  if (valid.length === 0) return;
+
+  const labels: string[] = [];
+  const studyTimes: number[] = [];
+  const mediaTimes: number[] = [];
+
+  valid.forEach(({ record, date }) => {
+    const rec = record!;
+    const d = rec.bedTime!;
+    const label = `${d.getUTCMonth() + 1}/${d.getUTCDate()}`;
+
+    labels.push(label);
+    studyTimes.push(rec.studyTime!.as("minutes"));
+    mediaTimes.push(rec.mediaTime!.as("minutes"));
+  });
+
+  setLineData({
+    labels: labels.reverse(),
+    datasets: [
+      {
+        label: "勉強時間（分）",
+        data: studyTimes.reverse(),
+        borderColor: "#90C0FF",
+        backgroundColor: "rgba(144, 192, 255, 0.2)",
+        fill: false,
+        tension: 0.2,
+      },
+      {
+        label: "メディア時間（分）",
+        data: mediaTimes.reverse(),
+        borderColor: "#FA8072",
+        backgroundColor: "rgba(250, 128, 114, 0.2)",
+        fill: false,
+        tension: 0.2,
+      },
+    ],
+  });
+}, []);
 
   // ---- ② 目標を localStorage から読み込む（これが欠けていた）----
   useEffect(() => {
