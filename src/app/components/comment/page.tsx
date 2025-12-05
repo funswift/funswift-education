@@ -24,7 +24,7 @@ export default function CommentPage() {
   };
 
   return (
-    <div className="fixed bottom-6 right-0 w-1/3 h-1/6 flex items-center justify-center">
+    // <div className="fixed bottom-6 right-0 w-1/3 h-1/6 flex items-center justify-center">
       <form
         onSubmit={handleSubmit}
         className="relative w-full h-full px-4 flex items-center"
@@ -47,6 +47,6 @@ export default function CommentPage() {
           送信
         </button>
       </form>
-    </div>
+    // </div>
   );
 }
