@@ -5,6 +5,7 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import DailyList from "./records/recordsList";
+import CommentPage from "./components/comment/page";
 
 export default function Home() {
   const router = useRouter();
@@ -52,6 +53,7 @@ export default function Home() {
         <div className="mt-5">
           <DailyList />
         </div>
+        <CommentPage />
       </div>
     </main>
   );
