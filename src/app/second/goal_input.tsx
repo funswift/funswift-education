@@ -1,64 +1,117 @@
 "use client";
 
 import React, { useState } from "react";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
+
+function parseTimeToDateISO(time: string): string | null {
+  if (!time) return null;
+  const [hhStr, mmStr] = time.split(":");
+  const hh = Number(hhStr || 0);
+  const mm = Number(mmStr || 0);
+  const d = new Date();
+  d.setHours(hh, mm, 0, 0);
+  return d.toISOString();
+}
+
+function parseTimeToMinutes(time: string): number {
+  if (!time) return 0;
+  if (time.includes(":")) {
+    const [hhStr, mmStr] = time.split(":");
+    const hh = Number(hhStr || 0);
+    const mm = Number(mmStr || 0);
+    return hh * 60 + mm;
+  }
+  const asNum = Number(time);
+  return Number.isFinite(asNum) ? Math.max(0, Math.floor(asNum)) : 0;
+}
 
 export default function GoalInput() {
-  // 4つの目標時刻を管理する配列
-  const [times, setTimes] = useState<string[]>(["", "", "", ""]);
+  // 平日の4つの目標を管理する配列
+  const [weekday, setWeekday] = useState<string[]>(["", "", "", ""]);
 
   const handleChange = (index: number, value: string) => {
-    setTimes(prev => {
+    setWeekday(prev => {
       const next = [...prev];
       next[index] = value;
       return next;
     });
   };
 
+  const router = useRouter();
+
+  const handleComplete = () => {
+    const bedISO = parseTimeToDateISO(weekday[0]);
+    const wakeISO = parseTimeToDateISO(weekday[1]);
+    const mediaMin = parseTimeToMinutes(weekday[2]);
+    const studyMin = parseTimeToMinutes(weekday[3]);
+
+    const payload = {
+      bedTimeGoal: bedISO,
+      wakeUpTimeGoal: wakeISO,
+      mediaTimeGoalMinutes: mediaMin,
+      studyTimeGoalMinutes: studyMin,
+    };
+
+    try {
+      localStorage.setItem("goal", JSON.stringify(payload));
+      console.log("Saved goal:", payload);
+    } catch (e) {
+      console.error("Failed to save goal to localStorage", e);
+    }
+
+    router.push("/");
+  };
+
   return (
     <div style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "60vh", padding: "2rem" }}>
-      <div style={{ width: 360, border: "2px solid #ccc", borderRadius: 12, padding: "1.25rem", boxShadow: "0 2px 8px rgba(0,0,0,0.06)" }}>
+      <div style={{ width: 600, border: "2px solid #ccc", borderRadius: 12, padding: "1.25rem", boxShadow: "0 2px 8px rgba(0,0,0,0.06)" }}>
         <h2 style={{ margin: 0, marginBottom: 12 }}>目標時刻を入力</h2>
 
-        {times.map((t, i) => (
-          <div key={i} style={{ marginBottom: 10 }}>
-            <label htmlFor={`time-input-${i}`} style={{ display: "block", marginBottom: 6, fontWeight: 600 }}>
-              時刻 {i + 1}
-            </label>
-            <input
-              id={`time-input-${i}`}
-              type="time"
-              value={t}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange(i, e.target.value)}
-              style={{ width: "100%", padding: ".5rem .75rem", fontSize: "1rem", borderRadius: 8, border: "1px solid #ddd" }}
-            />
-          </div>
-        ))}
+        {(() => {
+          const labels = ["寝る時間", "起きる時間", "メディア時間", "勉強時間"];
+          const maxMinutes = 240; // 1分刻みで 0..240 を選べる
+          const slots = Array.from({ length: maxMinutes + 1 }, (_, i) => i);
+
+          return (
+            <div>
+              <h3 style={{ marginTop: 0 }}>平日</h3>
+              {weekday.map((t, i) => {
+                const isDuration = i === 2 || i === 3;
+                return (
+                  <div key={i} style={{ marginBottom: 10 }}>
+                    <label htmlFor={`weekday-input-${i}`} style={{ display: "block", marginBottom: 6, fontWeight: 600 }}>{labels[i]}</label>
+                    {isDuration ? (
+                      <select id={`weekday-input-${i}`} value={t} onChange={(e: React.ChangeEvent<HTMLSelectElement>) => handleChange(i, e.target.value)} style={{ width: "100%", padding: ".5rem .75rem", fontSize: "1rem", borderRadius: 8, border: "1px solid #ddd" }}>
+                        <option value="">選択してください</option>
+                        {slots.map((m) => (
+                          <option key={m} value={String(m)}>{m} 分</option>
+                        ))}
+                      </select>
+                    ) : (
+                      <input id={`weekday-input-${i}`} type="time" value={t} onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange(i, e.target.value)} style={{ width: "100%", padding: ".5rem .75rem", fontSize: "1rem", borderRadius: 8, border: "1px solid #ddd" }} />
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          );
+        })()}
 
         <div style={{ marginTop: 12, color: "#333" }}>
           <strong>選択:</strong>
-          <ul style={{ margin: "6px 0 0 16px", padding: 0 }}>
-            {times.map((t, i) => (
-              <li key={i} style={{ listStyle: "decimal" }}>{`時刻 ${i + 1}: ${t || "未選択"}`}</li>
-            ))}
-          </ul>
+          <div style={{ display: "flex", gap: 24, marginTop: 8 }}>
+            <div style={{ flex: 1 }}>
+              <div style={{ fontWeight: 600 }}></div>
+              <ul style={{ margin: "6px 0 0 16px", padding: 0 }}>
+                {weekday.map((t, i) => <li key={i} style={{ listStyle: "decimal" }}>{`${i === 2 || i === 3 ? `${t || "未選択"} 分` : `${t || "未選択"}`}`}</li>)}
+              </ul>
+            </div>
+          </div>
 
           {/* 完了ボタンをボックス内に配置 */}
-          <div style={{ marginTop: 12, textAlign: "right" }}>
-            <Link
-              href="/"
-              style={{
-                display: "inline-block",
-                padding: "8px 12px",
-                borderRadius: 8,
-                backgroundColor: "#0070f3",
-                color: "#fff",
-                textDecoration: "none",
-                fontWeight: 600,
-              }}
-            >
-              完了
-            </Link>
+          <div style={{ marginTop: 12, display: "flex", justifyContent: "flex-end" }}>
+            <Button onClick={handleComplete}>完了</Button>
           </div>
         </div>
       </div>
