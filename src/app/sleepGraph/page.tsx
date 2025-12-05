@@ -30,6 +30,7 @@ export default function SleepPage() {
   const [chartData, setChartData] = useState<ChartInput[]>([]);
   const [goal, setGoal] = useState<StoredGoal | null>(null);
   const [lineData, setLineData] = useState<ChartData<"line"> | null>(null);
+  const [lineError, setLineError] = useState<string | null>(null);
 
   // ---- ① 睡眠記録を読み込む ----
   useEffect(() => {
@@ -48,45 +49,50 @@ export default function SleepPage() {
   setChartData(converted.reverse());
 }, []);
 
-
+// ---- 勉強・メディア時間の折れ線グラフ用データ読み込み ----
 useEffect(() => {
-  const list = loadLast14Days();
-  const valid = list.filter(item => item.record !== null);
-  if (valid.length === 0) return;
 
-  const labels: string[] = [];
-  const studyTimes: number[] = [];
-  const mediaTimes: number[] = [];
+    const list = loadLast14Days();
+    const valid = list.filter(item => item.record !== null);
 
-  valid.forEach(({ record, date }) => {
-    const rec = record!;
-    const d = rec.bedTime!;
-    const label = `${d.getUTCMonth() + 1}/${d.getUTCDate()}`;
+    if (valid.length === 0) {
+      setLineError("データが存在しません");
+    return;
+    }
 
-    labels.push(label);
-    studyTimes.push(rec.studyTime!.as("minutes"));
-    mediaTimes.push(rec.mediaTime!.as("minutes"));
-  });
+    const labels: string[] = [];
+    const studyTimes: number[] = [];
+    const mediaTimes: number[] = [];
 
-  setLineData({
-    labels: labels.reverse(),
-    datasets: [
-      {
-        label: "勉強時間（分）",
-        data: studyTimes.reverse(),
-        borderColor: "#90C0FF",
-        backgroundColor: "rgba(144, 192, 255, 0.2)",
-        fill: false,
-        tension: 0.2,
-      },
-      {
-        label: "メディア時間（分）",
-        data: mediaTimes.reverse(),
-        borderColor: "#FA8072",
-        backgroundColor: "rgba(250, 128, 114, 0.2)",
-        fill: false,
-        tension: 0.2,
-      },
+    valid.forEach(({ record, date }) => {
+      const rec = record!;
+      const d = rec.bedTime!;
+      const label = `${d.getUTCMonth() + 1}/${d.getUTCDate()}`;
+
+      labels.push(label);
+      studyTimes.push(rec.studyTime!.as("minutes"));
+      mediaTimes.push(rec.mediaTime!.as("minutes"));
+    });
+
+    setLineData({
+      labels: labels.reverse(),
+      datasets: [
+        {
+          label: "勉強時間（分）",
+          data: studyTimes.reverse(),
+          borderColor: "#90C0FF",
+          backgroundColor: "rgba(144, 192, 255, 0.2)",
+          fill: false,
+          tension: 0.2,
+        },
+        {
+          label: "メディア時間（分）",
+          data: mediaTimes.reverse(),
+          borderColor: "#FA8072",
+          backgroundColor: "rgba(250, 128, 114, 0.2)",
+          fill: false,
+          tension: 0.2,
+        },
     ],
   });
 }, []);
@@ -159,12 +165,14 @@ useEffect(() => {
 
           {/* 勉強・メディア折れ線グラフ */}
           <div className="w-full md:w-1/2 bg-white p-4 rounded-xl shadow min-w-0">
-            {lineData ? (
-              <StudyMediaChart data={lineData} />
-            ) : (
+            {lineError ? (
+            <p>{lineError}</p>
+          ) : lineData ? (
+            <StudyMediaChart data={lineData} />
+          ) : (
               <p>Loading...</p>
-            )}
-          </div>
+          )}
+        </div>
 
         </div>
       </div>
