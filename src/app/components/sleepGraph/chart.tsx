@@ -66,8 +66,8 @@ export default function SleepChart({
   }
 
   return (
-    <div style={{ width: "90vw", height: "60vh" }}>
-      <ResponsiveContainer>
+    <div className="w-full h-[300px]">
+      <ResponsiveContainer width="100%" height="100%">
         <BarChart
           data={converted}
           margin={{ top: 20, right: 20, bottom: 50, left: 20 }}
@@ -86,7 +86,7 @@ export default function SleepChart({
             domain={[19, 33]}
             allowDataOverflow={true}
             reversed
-            ticks={[20,21,22,23,24,25,26,27,28,29,30,31,32]}
+            ticks={[20,22,24,26,28,30,32]}
             interval={0}
             allowDecimals={false}
             tickFormatter={(v: number) => {
@@ -165,3 +165,65 @@ export default function SleepChart({
     </div>
   );
 }
+
+
+/*サンプルデータ
+
+(function () {
+  // ISO Duration の作成 ("PT90M")
+  const toISO = (minutes) => `PT${minutes}M`;
+
+  const today = new Date();
+
+  for (let i = 0; i < 14; i++) {　
+    const base = new Date(today);
+    base.setDate(today.getDate() - i);
+
+    const key = `dailyRecord-${base.toISOString().slice(0, 10)}`;
+
+    // -----------------------------------
+    // 🛏️ 就寝時間：22:00〜23:59（0時以降は絶対に寝ない）
+    // -----------------------------------
+    const sleepHourFloat = 22 + Math.random() * 2; // 22〜24未満
+    const bed = new Date(base);
+
+    const bedHour = Math.floor(sleepHourFloat);      // 22 or 23
+    const bedMin = Math.floor((sleepHourFloat - bedHour) * 60); // 0〜59
+
+    // 0時超えは絶対に起こらないので翌日処理は不要
+    bed.setHours(bedHour, bedMin, 0, 0); // 22:00〜23:59
+
+    // -----------------------------------
+    // 🌅 起床時間：翌 5:00〜9:00
+    // -----------------------------------
+    const wakeHourFloat = 5 + Math.random() * 4; // 5〜9
+    const wake = new Date(base);
+    wake.setDate(wake.getDate() + 1);
+
+    const wakeHour = Math.floor(wakeHourFloat);
+    const wakeMin = Math.floor((wakeHourFloat - wakeHour) * 60);
+    wake.setHours(wakeHour, wakeMin, 0, 0);
+
+    // -----------------------------------
+    // 📘 勉強 / メディア時間：0〜120分
+    // -----------------------------------
+    const record = {
+      bedTime: bed.toISOString(),
+      wakeUpTime: wake.toISOString(),
+      studyTime: toISO(Math.floor(Math.random() * 120)),
+      mediaTime: toISO(Math.floor(Math.random() * 120)),
+      exercise: Math.random() > 0.5,
+      reading: Math.random() > 0.5,
+      breakfast: true,
+      assistance: false,
+    };
+
+    localStorage.setItem(key, JSON.stringify(record));
+  }
+
+  console.log("✨ 0時以降に絶対に寝ない14日分データを保存しました！");
+})();
+
+
+
+*/
