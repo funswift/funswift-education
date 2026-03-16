@@ -98,9 +98,7 @@ export default function Goal() {
                   </div>
                 </div>
                 <div style={{ minWidth: 160 }}>
-                  <div style={{ fontWeight: 600, fontSize: 11 }}>
-                    勉強した時間
-                  </div>
+                  <div style={{ fontWeight: 600, fontSize: 11 }}>勉強時間</div>
                   <div style={{ color: "#444" }}>
                     {stored.studyTimeGoalMinutes ?? "未設定"} 分
                   </div>
