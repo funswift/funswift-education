@@ -92,7 +92,7 @@ export default function GoalInput() {
     });
   };
 
-  const labels = ["寝る時間", "起きる時間", "メディア時間", "勉強時間"];
+  const labels = ["寝る時刻", "起きる時刻", "メディア時間", "勉強時間"];
   const maxMinutes = 240;
   const slots = Array.from({ length: maxMinutes + 1 }, (_, i) => i);
   const hourSlots = Array.from({ length: 24 }, (_, i) =>
