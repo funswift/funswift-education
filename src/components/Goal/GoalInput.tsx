@@ -3,12 +3,12 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { Duration } from "luxon";
 
 // Helpers
 function parseTimeToDate(time: string): Date | null {
-  if (!time) return null;
+  if (!time || !time.includes(":")) return null;
   const [hhStr, mmStr] = time.split(":");
+  if (!hhStr || !mmStr) return null;
   const hh = Number(hhStr || 0);
   const mm = Number(mmStr || 0);
   const d = new Date();
@@ -29,6 +29,14 @@ function parseTimeToMinutes(time: string): number {
   return Number.isFinite(asNum) ? Math.max(0, Math.floor(asNum)) : 0;
 }
 
+function formatTimeForPreview(time: string): string {
+  if (!time || !time.includes(":")) return "未選択";
+  const [hh = "", mm = ""] = time.split(":");
+  if (!hh && !mm) return "未選択";
+  if (hh && mm) return `${hh}:${mm}`;
+  return `${hh || "--"}:${mm || "--"}`;
+}
+
 export default function GoalInput() {
   // 平日の4つの目標を管理
   const [weekday, setWeekday] = useState<string[]>(["", "", "", ""]);
@@ -36,10 +44,10 @@ export default function GoalInput() {
   const router = useRouter();
 
   const handleComplete = () => {
-          const bed = parseTimeToDate(weekday[0]);
-          const wake = parseTimeToDate(weekday[1]);
-          const mediaMin = parseTimeToMinutes(weekday[2]);
-          const studyMin = parseTimeToMinutes(weekday[3]);
+    const bed = parseTimeToDate(weekday[0]);
+    const wake = parseTimeToDate(weekday[1]);
+    const mediaMin = parseTimeToMinutes(weekday[2]);
+    const studyMin = parseTimeToMinutes(weekday[3]);
 
     const payload = {
       // weekday
@@ -49,48 +57,159 @@ export default function GoalInput() {
       studyTimeGoalMinutes: studyMin,
     };
 
-          try {
-            localStorage.setItem("goal", JSON.stringify(payload));
-            console.log("Saved goal:", payload);
-          } catch (e) {
-            console.error("Failed to save goal to localStorage", e);
-          }
+    try {
+      localStorage.setItem("goal", JSON.stringify(payload));
+      console.log("Saved goal:", payload);
+    } catch (e) {
+      console.error("Failed to save goal to localStorage", e);
+    }
 
     router.push("/");
   };
 
   const handleChange = (index: number, value: string) => {
-    setWeekday(prev => {
+    setWeekday((prev) => {
       const next = [...prev];
       next[index] = value;
       return next;
     });
   };
 
-  const labels = ["寝る時間", "起きる時間", "メディア時間", "勉強時間"];
+  const handleTimePartChange = (
+    index: number,
+    part: "hour" | "minute",
+    value: string,
+  ) => {
+    setWeekday((prev) => {
+      const next = [...prev];
+      const [currentHour = "", currentMinute = ""] = (next[index] || "").split(
+        ":",
+      );
+      const hour = part === "hour" ? value : currentHour;
+      const minute = part === "minute" ? value : currentMinute;
+      next[index] = hour || minute ? `${hour}:${minute}` : "";
+      return next;
+    });
+  };
+
+  const labels = ["寝る時刻", "起きる時刻", "メディア時間", "勉強時間"];
   const maxMinutes = 240;
   const slots = Array.from({ length: maxMinutes + 1 }, (_, i) => i);
+  const hourSlots = Array.from({ length: 24 }, (_, i) =>
+    String(i).padStart(2, "0"),
+  );
+  const minuteSlots = Array.from({ length: 60 }, (_, i) =>
+    String(i).padStart(2, "0"),
+  );
 
   return (
-    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "60vh", padding: "2rem" }}>
-      <div style={{ width: "min(820px, 95vw)", border: "2px solid #ccc", borderRadius: 12, padding: "1.25rem", boxShadow: "0 2px 8px rgba(0,0,0,0.06)" }}>
-              <h2 style={{ margin: 0, marginBottom: 12 ,fontSize: 20 }}>目標時刻を入力</h2>
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        minHeight: "60vh",
+        padding: "2rem",
+      }}
+    >
+      <div
+        style={{
+          width: "min(820px, 95vw)",
+          border: "2px solid #ccc",
+          borderRadius: 12,
+          padding: "1.25rem",
+          boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
+        }}
+      >
+        <h2 style={{ margin: 0, marginBottom: 12, fontSize: 20 }}>
+          目標時刻を入力
+        </h2>
 
         <div style={{ display: "flex", gap: 24 }}>
           <div style={{ flex: 1 }}>
             <h3 style={{ marginTop: 0, marginBottom: 8 }}></h3>
             {weekday.map((t, i) => {
               const isDuration = i === 2 || i === 3;
+              const [selectedHour = "", selectedMinute = ""] = t.split(":");
               return (
                 <div key={i} style={{ marginBottom: 10 }}>
-                  <label htmlFor={`weekday-input-${i}`} style={{ display: "block", marginBottom: 6, fontWeight: 600 }}>{labels[i]}</label>
+                  <label
+                    htmlFor={`weekday-input-${i}`}
+                    style={{
+                      display: "block",
+                      marginBottom: 6,
+                      fontWeight: 600,
+                    }}
+                  >
+                    {labels[i]}
+                  </label>
                   {isDuration ? (
-                    <select id={`weekday-input-${i}`} value={t} onChange={(e) => handleChange(i, e.target.value)} style={{ width: "100%", padding: ".5rem .75rem", fontSize: "1rem", borderRadius: 8, border: "1px solid #ddd" }}>
+                    <select
+                      id={`weekday-input-${i}`}
+                      value={t}
+                      onChange={(e) => handleChange(i, e.target.value)}
+                      style={{
+                        width: "100%",
+                        padding: ".5rem .75rem",
+                        fontSize: "1rem",
+                        borderRadius: 8,
+                        border: "1px solid #ddd",
+                      }}
+                    >
                       <option value="">選択してください</option>
-                      {slots.map(m => <option key={m} value={String(m)}>{m} 分</option>)}
+                      {slots.map((m) => (
+                        <option key={m} value={String(m)}>
+                          {m} 分
+                        </option>
+                      ))}
                     </select>
                   ) : (
-                    <input id={`weekday-input-${i}`} type="time" value={t} onChange={(e) => handleChange(i, e.target.value)} style={{ width: "100%", padding: ".5rem .75rem", fontSize: "1rem", borderRadius: 8, border: "1px solid #ddd" }} />
+                    <div
+                      style={{ display: "flex", alignItems: "center", gap: 8 }}
+                    >
+                      <select
+                        id={`weekday-input-${i}`}
+                        value={selectedHour}
+                        onChange={(e) =>
+                          handleTimePartChange(i, "hour", e.target.value)
+                        }
+                        style={{
+                          flex: 1,
+                          padding: ".5rem .75rem",
+                          fontSize: "1rem",
+                          borderRadius: 8,
+                          border: "1px solid #ddd",
+                        }}
+                      >
+                        <option value="">時</option>
+                        {hourSlots.map((hour) => (
+                          <option key={hour} value={hour}>
+                            {hour}
+                          </option>
+                        ))}
+                      </select>
+                      <span>:</span>
+                      <select
+                        value={selectedMinute}
+                        onChange={(e) =>
+                          handleTimePartChange(i, "minute", e.target.value)
+                        }
+                        style={{
+                          flex: 1,
+                          padding: ".5rem .75rem",
+                          fontSize: "1rem",
+                          borderRadius: 8,
+                          border: "1px solid #ddd",
+                        }}
+                      >
+                        <option value="">分</option>
+                        {minuteSlots.map((minute) => (
+                          <option key={minute} value={minute}>
+                            {minute}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
                   )}
                 </div>
               );
@@ -104,12 +223,23 @@ export default function GoalInput() {
             <div style={{ flex: 1 }}>
               <div style={{ fontWeight: 600 }}></div>
               <ul style={{ margin: "6px 0 0 16px", padding: 0 }}>
-                {weekday.map((t, i) => <li key={i} style={{ listStyle: "decimal" }}>{`${labels[i]}: ${i === 2 || i === 3 ? `${t || "未選択"} 分` : `${t || "未選択"}`}`}</li>)}
+                {weekday.map((t, i) => (
+                  <li
+                    key={i}
+                    style={{ listStyle: "decimal" }}
+                  >{`${labels[i]}: ${i === 2 || i === 3 ? `${t || "未選択"} 分` : formatTimeForPreview(t)}`}</li>
+                ))}
               </ul>
             </div>
           </div>
 
-          <div style={{ marginTop: 12, display: "flex", justifyContent: "flex-end" }}>
+          <div
+            style={{
+              marginTop: 12,
+              display: "flex",
+              justifyContent: "flex-end",
+            }}
+          >
             <Button onClick={handleComplete}>完了</Button>
           </div>
         </div>
